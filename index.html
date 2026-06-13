@@ -550,15 +550,15 @@ button:hover{background:linear-gradient(135deg,#0fa493,var(--links-blue));}
 }
 .pile.communal .cardInPile{margin:-78px;}
 .playerCard{
-  border-radius:18px;
-  filter:drop-shadow(0 10px 13px rgba(23,50,77,.16));
+  border-radius:0;
+  filter:none;
 }
 .playerCard:hover{
   transform:translateY(-5px) rotate(-1deg);
   box-shadow:none;
-  filter:drop-shadow(0 16px 18px rgba(23,50,77,.18)) drop-shadow(0 0 12px rgba(255,209,102,.55));
+  filter:drop-shadow(0 0 10px rgba(255,209,102,.5));
 }
-.cardFlyClone{border-radius:18px !important;filter:drop-shadow(0 18px 24px rgba(23,50,77,.2)) !important;}
+.cardFlyClone{border-radius:0 !important;filter:none !important;}
 .cardFlyClone.blockedClone{filter:drop-shadow(0 0 16px rgba(255,107,107,.85)) drop-shadow(0 18px 24px rgba(23,50,77,.22)) !important;}
 .centerCardSurface{z-index:5;}
 #cardOverlay{
@@ -625,6 +625,7 @@ body.in-game #app{
   padding:12px 16px 14px;
   display:flex;
   flex-direction:column;
+  overflow:visible;
 }
 #logo{
   width:214px;
@@ -718,6 +719,8 @@ body.in-game #gameSidebar{display:flex;}
 .pile .playerCard{
   width:var(--card-w) !important;
   height:var(--card-h) !important;
+  border-radius:0 !important;
+  box-shadow:none;
 }
 #opponentPilesTop .pile .playerCard{
   width:var(--opp-card-w) !important;
@@ -740,69 +743,79 @@ body.in-game #gameSidebar{display:flex;}
 }
 #centerArea::after{content:none;}
 #centerChainStage{
-  width:min(620px, 72vw);
-  min-height:calc(var(--center-card-h) + 18px);
+  width:min(920px, calc(100vw - 176px));
+  min-height:calc(var(--center-card-h) * 2.06);
   display:flex;
   align-items:center;
   justify-content:center;
   position:relative;
   isolation:isolate;
+  overflow:visible;
 }
 #chainHistory{
   position:absolute;
-  right:50%;
+  left:50%;
   top:50%;
-  width:min(330px, 32vw);
-  height:calc(var(--center-card-h) + 8px);
-  transform:translate(-72px, -50%);
-  display:flex;
-  align-items:center;
-  justify-content:flex-end;
-  gap:14px;
-  overflow:hidden;
+  width:min(690px, calc(100vw - 250px));
+  height:calc(var(--center-card-h) * 1.82);
+  transform:translate(-58%, -50%);
+  display:block;
+  overflow:visible;
   pointer-events:none;
-  opacity:.72;
+  opacity:1;
+  z-index:1;
 }
 .chainHistoryCard{
-  width:calc(var(--center-card-w) * .58);
-  height:calc(var(--center-card-h) * .58);
-  flex:0 0 auto;
-  border-radius:16px;
-  filter:drop-shadow(0 10px 16px rgba(23,50,77,.14));
-  opacity:.58;
-  transform:translateX(0);
+  position:absolute;
+  left:var(--x);
+  top:var(--y);
+  width:calc(var(--center-card-w) * var(--s, .55));
+  height:calc(var(--center-card-h) * var(--s, .55));
+  border-radius:0;
+  filter:none;
+  opacity:.9;
+  transform:translate(-50%, -50%) rotate(var(--r, 0deg));
   animation:historySlideIn .34s cubic-bezier(.18,.88,.2,1);
+  object-fit:contain;
+  z-index:2;
 }
 .chainConnector{
-  width:28px;
-  height:18px;
-  flex:0 0 auto;
-  position:relative;
-  opacity:.9;
+  position:absolute;
+  left:var(--x);
+  top:var(--y);
+  width:calc(var(--center-card-w) * .24);
+  height:calc(var(--center-card-w) * .14);
+  transform:translate(-50%, -50%) rotate(var(--r, 0deg));
+  opacity:.96;
+  z-index:1;
 }
 .chainConnector::before,
 .chainConnector::after{
   content:"";
   position:absolute;
-  top:2px;
-  width:18px;
-  height:12px;
-  border:5px solid #ffd166;
+  top:0;
+  width:60%;
+  height:70%;
+  border:4px solid #ffd166;
   border-radius:999px;
   background:transparent;
   box-shadow:0 3px 8px rgba(23,50,77,.1);
 }
-.chainConnector::before{left:0;transform:rotate(-18deg);}
-.chainConnector::after{right:0;transform:rotate(18deg);}
-@keyframes historySlideIn{from{opacity:0;transform:translateX(24px) scale(.94);}to{opacity:.58;transform:translateX(0) scale(1);}}
+.chainConnector::before{left:0;transform:rotate(-20deg);}
+.chainConnector::after{right:0;transform:rotate(20deg);}
+@keyframes historySlideIn{from{opacity:0;transform:translate(calc(-50% + 24px), -50%) rotate(var(--r, 0deg)) scale(.94);}to{opacity:.9;transform:translate(-50%, -50%) rotate(var(--r, 0deg)) scale(1);}}
 #deck{
   width:var(--center-card-w);
   height:var(--center-card-h);
   z-index:4;
+  border-radius:0;
+  filter:none;
 }
 .deckFront img,.deckBack img,.centerCardSurface img{
   width:var(--center-card-w);
   height:var(--center-card-h);
+  border-radius:0;
+  filter:none;
 }
 #centerPrompt{
   margin-bottom:10px;
@@ -811,12 +824,12 @@ body.in-game #gameSidebar{display:flex;}
   color:#17324d;
 }
 #centerPrompt.is-have{
-  background:#fff0e9;
-  box-shadow:0 10px 22px rgba(255,107,107,.18);
-}
-#centerPrompt.who-has{
   background:#e1f8f2;
   box-shadow:0 10px 22px rgba(22,183,167,.18);
+}
+#centerPrompt.who-has{
+  background:#fff0e9;
+  box-shadow:0 10px 22px rgba(255,107,107,.18);
 }
 #chainText{
   margin-top:8px;
@@ -844,7 +857,7 @@ body.in-game #gameSidebar{display:flex;}
   body.in-game #logo{transform:scale(.86);transform-origin:top left;}
   #gameSidebar{transform:scale(.88);transform-origin:top right;}
   #centerChainStage{width:82vw;}
-  #chainHistory{width:30vw;gap:10px;}
+  #chainHistory{width:42vw;transform:translate(-62%, -50%);}
 }
 </style>
 </head>
@@ -1091,6 +1104,25 @@ const linkCardSrcCache = new Map();
 let centerChainHistory = [];
 let lastRenderedChainCardId = null;
 let lastVisibleChain = null;
+const CHAIN_PATH = [
+  {x:"12%", y:"50%", r:"-7deg", s:.5},
+  {x:"25%", y:"27%", r:"8deg", s:.52},
+  {x:"40%", y:"50%", r:"-5deg", s:.54},
+  {x:"55%", y:"73%", r:"7deg", s:.54},
+  {x:"70%", y:"50%", r:"-6deg", s:.52},
+  {x:"55%", y:"27%", r:"8deg", s:.5},
+  {x:"40%", y:"50%", r:"-5deg", s:.52},
+  {x:"25%", y:"73%", r:"7deg", s:.5}
+];
+const CHAIN_CONNECTOR_PATH = [
+  {x:"18.5%", y:"38.5%", r:"-28deg"},
+  {x:"32.5%", y:"38.5%", r:"28deg"},
+  {x:"47.5%", y:"61.5%", r:"28deg"},
+  {x:"62.5%", y:"61.5%", r:"-28deg"},
+  {x:"62.5%", y:"38.5%", r:"28deg"},
+  {x:"47.5%", y:"38.5%", r:"-28deg"},
+  {x:"32.5%", y:"61.5%", r:"-28deg"}
+];
 
 function escapeSvgText(value){
 return String(value || "").replace(/[&<>"']/g, char => ({
@@ -1124,17 +1156,26 @@ function renderCenterChainHistory(){
 const historyEl = document.getElementById("chainHistory");
 if(!historyEl) return;
 historyEl.innerHTML = "";
-const visibleHistory = centerChainHistory.slice(-3);
+const visibleHistory = centerChainHistory.slice(-CHAIN_PATH.length);
 visibleHistory.forEach((entry, index) => {
 if(index > 0){
 const connector = document.createElement("span");
 connector.className = "chainConnector";
+const connectorPoint = CHAIN_CONNECTOR_PATH[Math.min(index - 1, CHAIN_CONNECTOR_PATH.length - 1)];
+connector.style.setProperty("--x", connectorPoint.x);
+connector.style.setProperty("--y", connectorPoint.y);
+connector.style.setProperty("--r", connectorPoint.r);
 historyEl.appendChild(connector);
 }
 const img = document.createElement("img");
 img.className = "chainHistoryCard";
-setCardImageSource(img, entry, "ihave");
-img.alt = entry.iHave || "Previous card";
+const point = CHAIN_PATH[index];
+img.style.setProperty("--x", point.x);
+img.style.setProperty("--y", point.y);
+img.style.setProperty("--r", point.r);
+img.style.setProperty("--s", point.s);
+setCardImageSource(img, entry, "whas");
+img.alt = entry.whoHas || "Previous Who has card";
 historyEl.appendChild(img);
 });
 }
@@ -1144,7 +1185,7 @@ if(!chain || chain.cardId === undefined || chain.cardId === null) return;
 const chainCardId = String(chain.cardId);
 if(lastRenderedChainCardId && chainCardId !== lastRenderedChainCardId && lastVisibleChain){
 centerChainHistory.push({...lastVisibleChain});
-centerChainHistory = centerChainHistory.slice(-4);
+centerChainHistory = centerChainHistory.slice(-CHAIN_PATH.length);
 renderCenterChainHistory();
 }
 lastRenderedChainCardId = chainCardId;
@@ -1178,21 +1219,22 @@ return `<circle ${common} cx="160" cy="178" r="82"/><text x="160" y="198" text-a
 function getLinkCardSrc(card, face="ihave"){
 const subject = face === "whas" ? card.whoHas : card.iHave;
 const assetSlug = String(subject || "").trim().toLowerCase();
-if(assetSlug) return `assets/cards/links/${face}-${assetSlug}.png`;
+const assetFace = face === "ihave" ? "whas" : "ihave";
+if(assetSlug) return `assets/cards/links/${assetFace}-${assetSlug}.png`;
 const key = `${face}:${subject}:${card.whoHas || ""}`;
 if(linkCardSrcCache.has(key)) return linkCardSrcCache.get(key);
 const isWho = face === "whas";
 const state = isWho ? {
-name: "teal",
-main: "#149c91",
-soft: "#dff7ef",
-wash: "#93ded0",
-accent: "#ffd166"
-} : {
 name: "coral",
 main: "#e75f5a",
 soft: "#fff0e9",
 wash: "#ffb09f",
+accent: "#ffd166"
+} : {
+name: "teal",
+main: "#149c91",
+soft: "#dff7ef",
+wash: "#93ded0",
 accent: "#ffd166"
 };
 const safeSubject = escapeSvgText(subject);
@@ -1220,7 +1262,8 @@ return src;
 
 function getFallbackCardSrc(card, face="ihave"){
 const subject = face === "whas" ? card.whoHas : card.iHave;
-return (CARD_IMAGES[face] && CARD_IMAGES[face][subject]) || "";
+const fallbackFace = face === "ihave" ? "whas" : "ihave";
+return (CARD_IMAGES[fallbackFace] && CARD_IMAGES[fallbackFace][subject]) || "";
 }
 
 function setCardImageSource(img, card, face="ihave"){
