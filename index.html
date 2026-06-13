@@ -628,7 +628,7 @@ body.in-game #app{
   overflow:visible;
 }
 #logo{
-  width:214px;
+  width:min(520px, 82vw);
   height:auto;
   padding:0;
   border-radius:0;
@@ -637,16 +637,26 @@ body.in-game #app{
   display:block;
   margin:0 auto 10px;
 }
+#logo img{
+  display:block;
+  width:100%;
+  height:auto;
+}
+.logoCompact{display:none;}
+.logoStacked{display:none;}
 #logo::after{content:none;}
 body.in-game #logo{
   position:absolute;
   left:20px;
   top:18px;
-  width:150px;
+  width:92px;
   height:auto;
   padding:0;
   z-index:120;
 }
+body.in-game .logoWide{display:none;}
+body.in-game .logoStacked{display:none;}
+body.in-game .logoCompact{display:block;}
 body.in-game #game{
   flex:1;
   min-height:0;
@@ -859,6 +869,11 @@ body.in-game #gameSidebar{display:flex;}
   #centerChainStage{width:82vw;}
   #chainHistory{width:42vw;transform:translate(-62%, -50%);}
 }
+@media (max-width:560px){
+  body:not(.in-game) #logo{width:min(320px, 82vw);}
+  body:not(.in-game) .logoWide{display:none;}
+  body:not(.in-game) .logoStacked{display:block;}
+}
 </style>
 </head>
 <body>
@@ -878,7 +893,11 @@ body.in-game #gameSidebar{display:flex;}
 </div>
 
 <div id="app">
-<img id="logo" src="assets/ui/links-logo.svg" alt="LINKS">
+<div id="logo" aria-label="LINKS">
+<img class="logoWide" src="assets/ui/links-logo-horizontal.png" alt="LINKS">
+<img class="logoStacked" src="assets/ui/links-logo-stacked.png" alt="LINKS">
+<img class="logoCompact" src="assets/ui/links-logo-icon.png" alt="" aria-hidden="true">
+</div>
 <h1>LINKS</h1>
 
 <div id="home">
