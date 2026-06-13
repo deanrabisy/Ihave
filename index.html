@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>I Have / Who Has</title>
+<title>LINKS</title>
 <style>
 body{margin:0;font-family:system-ui;background:radial-gradient(circle at 50% 18%, #174c63 0%, #0f3043 42%, #0f172a 100%);color:#004870;display:flex;justify-content:center;align-items:center;min-height:100vh;}
 #app{width:min(1240px, calc(100vw - 40px));background:linear-gradient(180deg,#dafbe9 0%,#c4f7e5 100%);padding:20px;border-radius:12px;box-shadow:0 18px 55px rgba(0,0,0,.42);position:relative;}
@@ -336,6 +336,545 @@ body.battleShake #board{animation:battleScreenShake 1.5s ease-in-out;}
   box-shadow:0 22px 70px rgba(0,0,0,.36);
   backdrop-filter:blur(12px);
 }
+/* LINKS bright party-table rebrand overrides */
+:root{
+  --links-ink:#17324d;
+  --links-table:#f7f3df;
+  --links-mint:#8ee8cf;
+  --links-teal:#16b7a7;
+  --links-coral:#ff6b6b;
+  --links-yellow:#ffd166;
+  --links-blue:#2f80ed;
+  --links-paper:#fffaf0;
+}
+body{
+  background:
+    radial-gradient(circle at 18% 16%, rgba(255,209,102,.34), transparent 24%),
+    radial-gradient(circle at 82% 12%, rgba(142,232,207,.38), transparent 25%),
+    linear-gradient(135deg,#fff7dc 0%,#dff8ef 45%,#d7eef8 100%);
+  color:var(--links-ink);
+}
+#app{
+  background:rgba(255,250,240,.86);
+  border:3px solid rgba(255,255,255,.72);
+  border-radius:24px;
+  box-shadow:0 24px 70px rgba(23,50,77,.22), inset 0 0 0 1px rgba(23,50,77,.06);
+  overflow:hidden;
+}
+#app::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background-image:
+    linear-gradient(90deg, rgba(23,50,77,.045) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(23,50,77,.04) 1px, transparent 1px);
+  background-size:34px 34px;
+  mask-image:linear-gradient(180deg, rgba(0,0,0,.42), transparent 55%);
+}
+#logo{
+  width:178px;
+  height:86px;
+  border-radius:20px;
+  padding:0;
+  object-fit:initial;
+  background:linear-gradient(135deg, var(--links-coral), var(--links-yellow) 48%, var(--links-mint));
+  color:var(--links-ink);
+  box-shadow:0 16px 34px rgba(23,50,77,.18), inset 0 0 0 4px rgba(255,255,255,.52);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:38px;
+  font-weight:950;
+  letter-spacing:0;
+  margin:0 auto 10px;
+}
+#logo::after{
+  content:"";
+  width:13px;
+  height:13px;
+  margin-left:10px;
+  border-radius:50%;
+  background:var(--links-ink);
+  box-shadow:20px 0 0 var(--links-ink),10px 0 0 4px rgba(255,255,255,.78);
+}
+body.in-game #logo{
+  width:122px;
+  height:54px;
+  left:18px;
+  top:20px;
+  padding:0;
+  font-size:27px;
+  border-radius:16px;
+}
+body.in-game #logo::after{transform:scale(.72);margin-left:6px;}
+h1{
+  color:var(--links-ink);
+  font-size:18px;
+  margin:0 0 24px;
+}
+h1::before{
+  content:"Build the chain. Make a connection.";
+  display:block;
+  font-size:20px;
+  font-weight:800;
+}
+h1{font-size:0;}
+#home,#lobby{
+  position:relative;
+  color:var(--links-ink);
+  padding:12px 0 18px;
+}
+#home::before{
+  content:none;
+}
+input,button{
+  border-radius:14px;
+  border:2px solid rgba(23,50,77,.1);
+  font-size:15px;
+}
+input{
+  background:white;
+  color:var(--links-ink);
+  box-shadow:inset 0 2px 0 rgba(23,50,77,.04);
+}
+button{
+  background:linear-gradient(135deg,var(--links-teal),#2cc7b6);
+  color:white;
+  box-shadow:0 8px 18px rgba(22,183,167,.26);
+}
+button:hover{background:linear-gradient(135deg,#0fa493,var(--links-blue));}
+#board{
+  height:730px;
+  grid-template-rows:190px 315px 1fr;
+  background:
+    radial-gradient(circle at 50% 47%, rgba(255,255,255,.92) 0 18%, rgba(255,255,255,.42) 31%, transparent 48%),
+    linear-gradient(180deg,#fff3cf 0%,#e9f8df 44%,#d8f7ec 100%);
+  border-radius:22px;
+  box-shadow:inset 0 0 0 3px rgba(255,255,255,.7), inset 0 -22px 54px rgba(22,183,167,.16);
+}
+#centerArea::before{
+  content:none;
+  position:absolute;
+  top:0;
+  padding:7px 13px;
+  border-radius:999px;
+  background:white;
+  color:#456078;
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:0;
+  box-shadow:0 8px 18px rgba(23,50,77,.1);
+}
+#centerArea::after{
+  content:"";
+  position:absolute;
+  width:430px;
+  height:118px;
+  border-radius:999px;
+  border:8px dotted rgba(22,183,167,.24);
+  pointer-events:none;
+}
+#deck{
+  width:178px;
+  height:248px;
+  border-radius:18px;
+  filter:drop-shadow(0 18px 24px rgba(23,50,77,.18));
+}
+#centerPrompt{
+  min-height:34px;
+  margin-bottom:18px;
+  padding:8px 18px;
+  border-radius:999px;
+  background:white;
+  color:var(--links-ink);
+  font-size:20px;
+  font-weight:950;
+  line-height:1;
+  box-shadow:0 10px 22px rgba(23,50,77,.12);
+  z-index:6;
+}
+#centerPrompt:empty{
+  opacity:0;
+}
+#deck.canFlip{
+  animation:centerLinkReady 1.25s ease-in-out infinite;
+}
+@keyframes centerLinkReady{0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-4px) scale(1.025);}}
+.deckFront,.deckBack{padding:0;overflow:visible;}
+.deckFront img,.deckBack img,.centerCardSurface img{
+  width:178px;
+  height:248px;
+  object-fit:contain;
+  border-radius:18px;
+}
+#chainText{
+  display:block;
+  min-height:28px;
+  margin-top:12px;
+  padding:7px 14px;
+  border-radius:999px;
+  background:rgba(255,255,255,.78);
+  color:var(--links-ink);
+  font-size:14px;
+  font-weight:850;
+  box-shadow:0 8px 20px rgba(23,50,77,.1);
+}
+.pile{
+  width:126px;
+  height:184px;
+  min-height:184px;
+  border-radius:18px;
+  padding:5px;
+}
+#opponentPilesTop .pile{
+  width:90px;
+  height:132px;
+  min-height:132px;
+}
+#playerPilesTop .pile::after{
+  left:14px;
+  right:14px;
+  bottom:0;
+  height:9px;
+  background:linear-gradient(90deg, transparent, var(--links-coral), var(--links-yellow), var(--links-teal), transparent);
+  box-shadow:0 8px 18px rgba(22,183,167,.22);
+}
+.pile:not(.communal) .cardInPile{margin-top:-120px;}
+#opponentPilesTop .pile:not(.communal) .cardInPile{margin-top:-92px;}
+.pile.communal{
+  min-width:420px;
+  min-height:190px;
+  border-radius:28px;
+  background:rgba(255,255,255,.34);
+}
+.pile.communal .cardInPile{margin:-78px;}
+.playerCard{
+  border-radius:18px;
+  filter:drop-shadow(0 10px 13px rgba(23,50,77,.16));
+}
+.playerCard:hover{
+  transform:translateY(-5px) rotate(-1deg);
+  box-shadow:none;
+  filter:drop-shadow(0 16px 18px rgba(23,50,77,.18)) drop-shadow(0 0 12px rgba(255,209,102,.55));
+}
+.cardFlyClone{border-radius:18px !important;filter:drop-shadow(0 18px 24px rgba(23,50,77,.2)) !important;}
+.cardFlyClone.blockedClone{filter:drop-shadow(0 0 16px rgba(255,107,107,.85)) drop-shadow(0 18px 24px rgba(23,50,77,.22)) !important;}
+.centerCardSurface{z-index:5;}
+#cardOverlay{
+  background:rgba(255,250,240,.96);
+  border:3px solid rgba(255,209,102,.72);
+  border-radius:24px;
+  box-shadow:0 22px 54px rgba(23,50,77,.2);
+}
+#overlayTitle{color:var(--links-ink);font-size:18px;}
+#overlaySubtitle{color:#456078;font-weight:750;}
+#readyPanel{
+  background:rgba(23,50,77,.94);
+  border:2px solid rgba(255,209,102,.62);
+}
+#readyBtn{background:linear-gradient(135deg,var(--links-coral),var(--links-yellow));color:var(--links-ink);}
+#gameSidebar #scoreBoard{
+  background:rgba(255,250,240,.95);
+  border:2px solid rgba(255,209,102,.85);
+  color:var(--links-ink);
+  border-radius:16px;
+}
+#gameSidebar #scoreBoard::before{
+  content:"Links";
+  display:block;
+  margin-bottom:6px;
+  font-weight:950;
+  color:var(--links-coral);
+}
+#gameSidebar #restartBtn{
+  background:linear-gradient(135deg,var(--links-coral),var(--links-yellow));
+  color:var(--links-ink);
+  border-color:white;
+}
+#battleScreen{
+  background:linear-gradient(135deg, rgba(23,50,77,.98), rgba(255,107,107,.94), rgba(255,209,102,.92)) !important;
+}
+#battleText{color:white !important;text-shadow:0 0 34px rgba(255,209,102,.84) !important;}
+#battleText::after{
+  content:" CHAIN CLASH";
+}
+#battleButton{
+  background:radial-gradient(circle at 50% 36%, white, var(--links-yellow) 35%, var(--links-coral) 72%) !important;
+  border-color:white !important;
+}
+#winnerAnnouncement{
+  background:rgba(23,50,77,.82);
+  border:2px solid rgba(255,255,255,.26);
+}
+/* Final LINKS direction: infinity logo, simple cards, responsive chain table */
+:root{
+  --card-w:clamp(82px, 8.6vw, 118px);
+  --card-h:var(--card-w);
+  --opp-card-w:clamp(54px, 6vw, 78px);
+  --opp-card-h:var(--opp-card-w);
+  --center-card-w:clamp(116px, 11vw, 158px);
+  --center-card-h:var(--center-card-w);
+}
+body.in-game{
+  overflow:hidden;
+}
+body.in-game #app{
+  width:min(1240px, calc(100vw - 28px));
+  height:calc(100vh - 28px);
+  padding:12px 16px 14px;
+  display:flex;
+  flex-direction:column;
+}
+#logo{
+  width:auto;
+  height:auto;
+  min-width:214px;
+  padding:10px 16px 10px 12px;
+  gap:10px;
+  border-radius:22px;
+  background:#fffaf0;
+  color:var(--links-ink);
+  font-family:Arial Rounded MT Bold, Arial, Helvetica, sans-serif;
+  font-size:36px;
+  line-height:1;
+  box-shadow:0 14px 30px rgba(23,50,77,.14), inset 0 0 0 3px rgba(255,255,255,.75);
+}
+.logoMark{
+  width:74px;
+  height:38px;
+  overflow:visible;
+}
+.logoLoop{
+  fill:none;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  stroke-width:12;
+}
+.logoLoopCoral{stroke:#ff6b6b;}
+.logoLoopTeal{stroke:#16b7a7;stroke-dasharray:92 92;stroke-dashoffset:-92;}
+.logoClasp{
+  fill:#ffd166;
+  stroke:#17324d;
+  stroke-width:3;
+}
+#logo::after{content:none;}
+body.in-game #logo{
+  position:absolute;
+  left:20px;
+  top:18px;
+  width:auto;
+  height:auto;
+  min-width:150px;
+  padding:8px 12px 8px 10px;
+  font-size:26px;
+  border-radius:18px;
+  z-index:120;
+}
+body.in-game .logoMark{
+  width:52px;
+  height:28px;
+}
+body.in-game #game{
+  flex:1;
+  min-height:0;
+}
+#board{
+  height:100%;
+  min-height:0;
+  grid-template-rows:minmax(110px, .86fr) minmax(210px, 1.35fr) minmax(160px, 1fr);
+  padding:clamp(8px, 1.1vw, 14px);
+}
+#gameSidebar{
+  position:absolute;
+  top:18px;
+  right:20px;
+  left:auto;
+  z-index:125;
+  flex-direction:row;
+  align-items:flex-start;
+}
+body.in-game #gameSidebar{display:flex;}
+#gameSidebar #scoreBoard{
+  min-width:154px;
+  width:auto;
+  padding:10px 12px;
+  border-radius:18px;
+  box-shadow:0 12px 26px rgba(23,50,77,.12);
+}
+#gameSidebar #scoreBoard::before{
+  content:"Score";
+  color:#17324d;
+}
+#gameSidebar #restartBtn{
+  width:40px;
+  height:40px;
+}
+#opponentPilesTop{
+  height:150px;
+  transform:translateY(112px);
+}
+#playerPilesTop{
+  height:190px;
+  transform:translateY(-18px);
+}
+#playerPilesTop .pile:nth-child(1){transform:translateX(calc(var(--card-w) * -3.95)) translateY(0);}
+#playerPilesTop .pile:nth-child(2){transform:translateX(calc(var(--card-w) * -2.82)) translateY(30px);}
+#playerPilesTop .pile:nth-child(3){transform:translateX(calc(var(--card-w) * -1.7)) translateY(54px);}
+#playerPilesTop .pile:nth-child(4){transform:translateX(calc(var(--card-w) * -.58)) translateY(68px);}
+#playerPilesTop .pile:nth-child(5){transform:translateX(calc(var(--card-w) * .58)) translateY(68px);}
+#playerPilesTop .pile:nth-child(6){transform:translateX(calc(var(--card-w) * 1.7)) translateY(54px);}
+#playerPilesTop .pile:nth-child(7){transform:translateX(calc(var(--card-w) * 2.82)) translateY(30px);}
+#playerPilesTop .pile:nth-child(8){transform:translateX(calc(var(--card-w) * 3.95)) translateY(0);}
+#opponentPilesTop .pile:nth-child(1){transform:translateX(calc(var(--opp-card-w) * 4.35)) translateY(0);}
+#opponentPilesTop .pile:nth-child(2){transform:translateX(calc(var(--opp-card-w) * 3.04)) translateY(-18px);}
+#opponentPilesTop .pile:nth-child(3){transform:translateX(calc(var(--opp-card-w) * 1.76)) translateY(-32px);}
+#opponentPilesTop .pile:nth-child(4){transform:translateX(calc(var(--opp-card-w) * .58)) translateY(-42px);}
+#opponentPilesTop .pile:nth-child(5){transform:translateX(calc(var(--opp-card-w) * -.58)) translateY(-42px);}
+#opponentPilesTop .pile:nth-child(6){transform:translateX(calc(var(--opp-card-w) * -1.76)) translateY(-32px);}
+#opponentPilesTop .pile:nth-child(7){transform:translateX(calc(var(--opp-card-w) * -3.04)) translateY(-18px);}
+#opponentPilesTop .pile:nth-child(8){transform:translateX(calc(var(--opp-card-w) * -4.35)) translateY(0);}
+.pile{
+  width:var(--card-w);
+  height:var(--card-h);
+  min-height:var(--card-h);
+}
+#opponentPilesTop .pile{
+  width:var(--opp-card-w);
+  height:var(--opp-card-h);
+  min-height:var(--opp-card-h);
+}
+.pile .playerCard{
+  width:var(--card-w) !important;
+  height:var(--card-h) !important;
+}
+#opponentPilesTop .pile .playerCard{
+  width:var(--opp-card-w) !important;
+  height:var(--opp-card-h) !important;
+}
+#overlayCards .playerCard{
+  width:clamp(98px, 10vw, 126px) !important;
+  height:clamp(98px, 10vw, 126px) !important;
+}
+.pile:not(.communal) .cardInPile{margin-top:calc(var(--card-h) * -.68);}
+#opponentPilesTop .pile:not(.communal) .cardInPile{margin-top:calc(var(--opp-card-h) * -.66);}
+.pile.communal{
+  min-width:min(420px, 58vw);
+  min-height:calc(var(--card-h) + 20px);
+}
+.pile.communal .cardInPile{margin:calc(var(--card-w) * -.54);}
+#centerArea{
+  justify-content:center;
+  gap:0;
+}
+#centerArea::after{content:none;}
+#centerChainStage{
+  width:min(620px, 72vw);
+  min-height:calc(var(--center-card-h) + 18px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  isolation:isolate;
+}
+#chainHistory{
+  position:absolute;
+  right:50%;
+  top:50%;
+  width:min(330px, 32vw);
+  height:calc(var(--center-card-h) + 8px);
+  transform:translate(-72px, -50%);
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:14px;
+  overflow:hidden;
+  pointer-events:none;
+  opacity:.72;
+}
+.chainHistoryCard{
+  width:calc(var(--center-card-w) * .58);
+  height:calc(var(--center-card-h) * .58);
+  flex:0 0 auto;
+  border-radius:16px;
+  filter:drop-shadow(0 10px 16px rgba(23,50,77,.14));
+  opacity:.58;
+  transform:translateX(0);
+  animation:historySlideIn .34s cubic-bezier(.18,.88,.2,1);
+}
+.chainConnector{
+  width:28px;
+  height:18px;
+  flex:0 0 auto;
+  position:relative;
+  opacity:.9;
+}
+.chainConnector::before,
+.chainConnector::after{
+  content:"";
+  position:absolute;
+  top:2px;
+  width:18px;
+  height:12px;
+  border:5px solid #ffd166;
+  border-radius:999px;
+  background:transparent;
+  box-shadow:0 3px 8px rgba(23,50,77,.1);
+}
+.chainConnector::before{left:0;transform:rotate(-18deg);}
+.chainConnector::after{right:0;transform:rotate(18deg);}
+@keyframes historySlideIn{from{opacity:0;transform:translateX(24px) scale(.94);}to{opacity:.58;transform:translateX(0) scale(1);}}
+#deck{
+  width:var(--center-card-w);
+  height:var(--center-card-h);
+  z-index:4;
+}
+.deckFront img,.deckBack img,.centerCardSurface img{
+  width:var(--center-card-w);
+  height:var(--center-card-h);
+}
+#centerPrompt{
+  margin-bottom:10px;
+  font-family:Arial Rounded MT Bold, Arial, Helvetica, sans-serif;
+  font-size:clamp(17px, 2vw, 24px);
+  color:#17324d;
+}
+#centerPrompt.is-have{
+  background:#fff0e9;
+  box-shadow:0 10px 22px rgba(255,107,107,.18);
+}
+#centerPrompt.who-has{
+  background:#e1f8f2;
+  box-shadow:0 10px 22px rgba(22,183,167,.18);
+}
+#chainText{
+  margin-top:8px;
+  font-size:13px;
+  min-height:24px;
+  padding:6px 12px;
+}
+#cardOverlay{
+  transform:translate(-50%, -50%);
+  width:min(760px, calc(100vw - 44px));
+}
+#battleText::after{content:"";}
+@media (max-height:760px){
+  :root{
+    --card-w:clamp(68px, 7.2vw, 96px);
+    --center-card-w:clamp(96px, 9.2vw, 132px);
+  }
+  body.in-game #app{height:calc(100vh - 16px);padding:8px 12px;}
+  #board{grid-template-rows:minmax(86px, .72fr) minmax(180px, 1.35fr) minmax(132px, 1fr);}
+  #opponentPilesTop{transform:translateY(86px);}
+  #playerPilesTop{height:150px;transform:translateY(-10px);}
+  #chainText{display:none;}
+}
+@media (max-width:900px){
+  body.in-game #logo{transform:scale(.86);transform-origin:top left;}
+  #gameSidebar{transform:scale(.88);transform-origin:top right;}
+  #centerChainStage{width:82vw;}
+  #chainHistory{width:30vw;gap:10px;}
+}
 </style>
 </head>
 <body>
@@ -355,12 +894,19 @@ body.battleShake #board{animation:battleScreenShake 1.5s ease-in-out;}
 </div>
 
 <div id="app">
-<img id="logo" src="assets/ui/adaptive-logo.png" alt="Logo">
-<h1>I Have / Who Has</h1>
+<div id="logo" role="img" aria-label="LINKS">
+<svg class="logoMark" viewBox="0 0 96 48" aria-hidden="true">
+<path class="logoLoop logoLoopCoral" d="M10 24 C10 8 30 8 48 24 C66 40 86 40 86 24 C86 8 66 8 48 24 C30 40 10 40 10 24 Z"/>
+<path class="logoLoop logoLoopTeal" d="M48 24 C66 8 86 8 86 24 C86 40 66 40 48 24 C30 8 10 8 10 24 C10 40 30 40 48 24 Z"/>
+<circle class="logoClasp" cx="48" cy="24" r="8"/>
+</svg>
+<span>LINKS</span>
+</div>
+<h1>LINKS</h1>
 
 <div id="home">
 Enter your name<br>
-<input id="nameInput" placeholder="name"><br>
+<input id="nameInput" placeholder="Name"><br>
 <button id="enterBtn">Enter</button>
 <div id="loginStatus"></div>
 </div>
@@ -369,7 +915,7 @@ Enter your name<br>
 <div id="share"></div>
 <div id="players"></div>
 <br>
-<button id="startGameBtn">Start Game</button>
+<button id="startGameBtn">Start game</button>
 </div>
 
 <div id="game">
@@ -381,10 +927,14 @@ Enter your name<br>
 </div>
 </div>
 <div id="centerArea">
+<div id="centerPrompt"></div>
+<div id="centerChainStage">
+<div id="chainHistory" aria-hidden="true"></div>
 <div id="deck">
 <div class="deckInner">
 <div class="deckFront">Waiting...</div>
 <div class="deckBack"></div>
+</div>
 </div>
 </div>
 <div id="chainText"></div>
@@ -551,6 +1101,183 @@ const DECK_THEME = {
   ]
 };
 
+const LINK_ANIMAL_ICONS = {
+  Alligator: "AL",
+  Cat: "CT",
+  Dog: "DG",
+  Elephant: "EL",
+  Horse: "HR",
+  Lion: "LN",
+  Shark: "SH",
+  Snake: "SN"
+};
+
+const LINK_ANIMAL_COLORS = {
+  Alligator: ["#8ee8cf", "#16b7a7"],
+  Cat: ["#ffd166", "#ff9f1c"],
+  Dog: ["#ffb4a2", "#ff6b6b"],
+  Elephant: ["#c7d2fe", "#7c8cf8"],
+  Horse: ["#f4c095", "#c77d3b"],
+  Lion: ["#ffe066", "#f77f00"],
+  Shark: ["#9be7ff", "#2f80ed"],
+  Snake: ["#caffbf", "#5fbf69"]
+};
+
+const linkCardSrcCache = new Map();
+let centerChainHistory = [];
+let lastRenderedChainCardId = null;
+let lastVisibleChain = null;
+
+function escapeSvgText(value){
+return String(value || "").replace(/[&<>"']/g, char => ({
+"&":"&amp;",
+"<":"&lt;",
+">":"&gt;",
+"\"":"&quot;",
+"'":"&apos;"
+}[char]));
+}
+
+function articleFor(value){
+const word = String(value || "").trim().toLowerCase();
+return /^[aeiou]/.test(word) ? "an" : "a";
+}
+
+function formatCenterPrompt(chain){
+if(!chain) return "";
+if(chain.flipped) return `Who has ${articleFor(chain.whoHas)} ${chain.whoHas.toLowerCase()}?`;
+return `I have ${articleFor(chain.iHave)} ${chain.iHave.toLowerCase()}.`;
+}
+
+function setCenterPrompt(chain){
+if(!centerPrompt) return;
+centerPrompt.textContent = chain ? formatCenterPrompt(chain) : "";
+centerPrompt.classList.toggle("is-have", Boolean(chain && !chain.flipped));
+centerPrompt.classList.toggle("who-has", Boolean(chain && chain.flipped));
+}
+
+function renderCenterChainHistory(){
+const historyEl = document.getElementById("chainHistory");
+if(!historyEl) return;
+historyEl.innerHTML = "";
+const visibleHistory = centerChainHistory.slice(-3);
+visibleHistory.forEach((entry, index) => {
+if(index > 0){
+const connector = document.createElement("span");
+connector.className = "chainConnector";
+historyEl.appendChild(connector);
+}
+const img = document.createElement("img");
+img.className = "chainHistoryCard";
+setCardImageSource(img, entry, "ihave");
+img.alt = entry.iHave || "Previous card";
+historyEl.appendChild(img);
+});
+}
+
+function rememberChainCard(chain){
+if(!chain || chain.cardId === undefined || chain.cardId === null) return;
+const chainCardId = String(chain.cardId);
+if(lastRenderedChainCardId && chainCardId !== lastRenderedChainCardId && lastVisibleChain){
+centerChainHistory.push({...lastVisibleChain});
+centerChainHistory = centerChainHistory.slice(-4);
+renderCenterChainHistory();
+}
+lastRenderedChainCardId = chainCardId;
+lastVisibleChain = {...chain};
+}
+
+function animalIconSvg(subject, ink="#17324d", accent="#ff6b6b"){
+const common = `fill="${ink}" fill-opacity=".88"`;
+switch(subject){
+case "Cat":
+return `<path ${common} d="M91 118 L118 82 L144 116 Q164 108 184 116 L210 82 L237 118 Q262 143 262 180 Q262 238 204 266 Q160 287 116 266 Q58 238 58 180 Q58 143 91 118 Z"/><circle cx="128" cy="174" r="8" fill="#fffaf0"/><circle cx="192" cy="174" r="8" fill="#fffaf0"/><path d="M60 210 C28 202 28 160 62 156" fill="none" stroke="${accent}" stroke-width="18" stroke-linecap="round"/>`;
+case "Elephant":
+return `<ellipse ${common} cx="158" cy="178" rx="92" ry="70"/><circle ${common} cx="90" cy="166" r="42"/><circle ${common} cx="226" cy="166" r="42"/><path ${common} d="M141 214 C140 256 158 282 186 274 C205 268 205 240 184 238 C175 237 169 243 169 252"/><circle cx="129" cy="170" r="7" fill="#fffaf0"/><circle cx="188" cy="170" r="7" fill="#fffaf0"/><path d="M92 224 Q74 244 58 224" fill="none" stroke="${accent}" stroke-width="14" stroke-linecap="round"/>`;
+case "Dog":
+return `<path ${common} d="M86 132 Q96 82 134 112 Q160 102 186 112 Q224 82 234 132 Q260 154 260 190 Q260 244 206 267 Q160 286 114 267 Q60 244 60 190 Q60 154 86 132 Z"/><path d="M91 135 Q76 176 91 213" fill="none" stroke="${accent}" stroke-width="22" stroke-linecap="round"/><path d="M229 135 Q244 176 229 213" fill="none" stroke="${accent}" stroke-width="22" stroke-linecap="round"/><circle cx="130" cy="180" r="8" fill="#fffaf0"/><circle cx="190" cy="180" r="8" fill="#fffaf0"/>`;
+case "Alligator":
+return `<path ${common} d="M43 182 Q88 128 172 134 Q238 139 282 184 Q228 224 151 221 Q86 218 43 182 Z"/><path d="M65 181 H252" stroke="#fffaf0" stroke-width="9" stroke-linecap="round"/><circle cx="116" cy="154" r="8" fill="#fffaf0"/><circle cx="150" cy="151" r="8" fill="#fffaf0"/><path d="M226 149 Q260 132 286 148" fill="none" stroke="${accent}" stroke-width="14" stroke-linecap="round"/>`;
+case "Horse":
+return `<path ${common} d="M116 94 Q183 74 220 116 Q248 148 230 198 Q214 242 169 271 L120 271 Q137 234 125 200 Q104 186 94 158 Q82 123 116 94 Z"/><path d="M139 96 Q122 144 140 190" fill="none" stroke="${accent}" stroke-width="18" stroke-linecap="round"/><circle cx="192" cy="145" r="8" fill="#fffaf0"/>`;
+case "Lion":
+return `<circle cx="160" cy="177" r="96" fill="${accent}" fill-opacity=".82"/><circle ${common} cx="160" cy="177" r="64"/><circle cx="135" cy="166" r="7" fill="#fffaf0"/><circle cx="185" cy="166" r="7" fill="#fffaf0"/>`;
+case "Shark":
+return `<path ${common} d="M42 190 Q126 112 252 156 L292 126 L274 190 L292 254 L252 222 Q125 266 42 190 Z"/><path d="M150 139 L174 89 L194 151" fill="${accent}"/><circle cx="226" cy="172" r="7" fill="#fffaf0"/>`;
+case "Snake":
+return `<path d="M74 224 C138 270 246 260 246 198 C246 144 158 160 158 112 C158 78 207 78 234 102" fill="none" stroke="${ink}" stroke-opacity=".88" stroke-width="42" stroke-linecap="round"/><path d="M238 103 L280 92" stroke="${accent}" stroke-width="9" stroke-linecap="round"/><circle cx="221" cy="91" r="6" fill="#fffaf0"/>`;
+default:
+return `<circle ${common} cx="160" cy="178" r="82"/><text x="160" y="198" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="950" fill="#fffaf0">${escapeSvgText(String(subject || "?").slice(0,2).toUpperCase())}</text>`;
+}
+}
+
+function getLinkCardSrc(card, face="ihave"){
+const subject = face === "whas" ? card.whoHas : card.iHave;
+const assetSlug = String(subject || "").trim().toLowerCase();
+if(assetSlug) return `assets/cards/links/${face}-${assetSlug}.png`;
+const key = `${face}:${subject}:${card.whoHas || ""}`;
+if(linkCardSrcCache.has(key)) return linkCardSrcCache.get(key);
+const isWho = face === "whas";
+const state = isWho ? {
+name: "teal",
+main: "#149c91",
+soft: "#dff7ef",
+wash: "#93ded0",
+accent: "#ffd166"
+} : {
+name: "coral",
+main: "#e75f5a",
+soft: "#fff0e9",
+wash: "#ffb09f",
+accent: "#ffd166"
+};
+const safeSubject = escapeSvgText(subject);
+const iconMarkup = animalIconSvg(subject, "#17324d", state.main);
+const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="300" height="420" viewBox="0 0 300 420">
+<defs>
+<linearGradient id="paper" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fffdf4"/><stop offset="1" stop-color="${state.soft}"/></linearGradient>
+<radialGradient id="glow" cx="50%" cy="38%" r="58%"><stop stop-color="${state.wash}" stop-opacity=".55"/><stop offset=".62" stop-color="${state.wash}" stop-opacity=".14"/><stop offset="1" stop-color="${state.wash}" stop-opacity="0"/></radialGradient>
+<filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="9" flood-color="#17324d" flood-opacity=".14"/></filter>
+</defs>
+<rect x="11" y="11" width="278" height="398" rx="30" fill="url(#paper)" filter="url(#shadow)"/>
+<rect x="23" y="23" width="254" height="374" rx="23" fill="none" stroke="${state.main}" stroke-opacity=".42" stroke-width="4"/>
+<rect x="34" y="34" width="232" height="7" rx="4" fill="${state.main}"/>
+<circle cx="66" cy="72" r="10" fill="${state.main}" opacity=".82"/>
+<circle cx="234" cy="72" r="10" fill="${state.main}" opacity=".82"/>
+<circle cx="150" cy="178" r="104" fill="url(#glow)"/>
+<g>${iconMarkup}</g>
+<text x="150" y="342" text-anchor="middle" font-family="Arial Rounded MT Bold, Arial, Helvetica, sans-serif" font-size="42" font-weight="900" fill="#17324d" letter-spacing="0">${safeSubject}</text>
+<path d="M111 370 C126 358 139 358 150 370 C161 382 174 382 189 370" fill="none" stroke="${state.accent}" stroke-width="10" stroke-linecap="round" opacity=".76"/>
+</svg>`;
+const src = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+linkCardSrcCache.set(key, src);
+return src;
+}
+
+function getFallbackCardSrc(card, face="ihave"){
+const subject = face === "whas" ? card.whoHas : card.iHave;
+return (CARD_IMAGES[face] && CARD_IMAGES[face][subject]) || "";
+}
+
+function setCardImageSource(img, card, face="ihave"){
+const primarySrc = getLinkCardSrc(card, face);
+const fallbackSrc = getFallbackCardSrc(card, face);
+img.onerror = () => {
+if(!fallbackSrc || img.src.endsWith(fallbackSrc)) return;
+img.onerror = null;
+img.src = fallbackSrc;
+};
+img.src = primarySrc || fallbackSrc;
+}
+
+function cardImgHtml(card, face="ihave"){
+const primarySrc = getLinkCardSrc(card, face);
+const fallbackSrc = getFallbackCardSrc(card, face);
+const alt = escapeSvgText(face === "whas" ? card.whoHas : card.iHave);
+const fallbackAttr = fallbackSrc ? ` onerror="this.onerror=null;this.src='${fallbackSrc}'"` : "";
+return `<img src="${primarySrc || fallbackSrc}" alt="${alt}"${fallbackAttr}>`;
+}
+
 const home=document.getElementById("home");
 const lobby=document.getElementById("lobby");
 const game=document.getElementById("game");
@@ -559,6 +1286,7 @@ const startBtn=document.getElementById("startGameBtn");
 const restartBtn=document.getElementById("restartBtn");
 const chainText=document.getElementById("chainText");
 const deck=document.getElementById("deck");
+const centerPrompt=document.getElementById("centerPrompt");
 let pendingCardId=null;
 let playValidationInProgress=false;
 let activePlayId=null;
@@ -609,10 +1337,11 @@ function makeDeck(){
 function preloadCardImages(){
 if(cardImagesPreloaded) return;
 cardImagesPreloaded = true;
-const urls = new Set([
-...Object.values(CARD_IMAGES.ihave),
-...Object.values(CARD_IMAGES.whas)
-]);
+const urls = new Set();
+DECK_THEME.cards.forEach(card => {
+urls.add(getLinkCardSrc(card, "ihave"));
+urls.add(getLinkCardSrc(card, "whas"));
+});
 urls.forEach(src => {
 const img = new Image();
 img.decoding = "async";
@@ -808,13 +1537,13 @@ deckRejectTimers.push(timer);
 
 function createPlayerCardImage(card, inOverlay=false){
 const img = document.createElement("img");
-img.src = CARD_IMAGES.ihave[card.iHave] || "";
-img.alt = card.iHave;
+setCardImageSource(img, card, "ihave");
+img.alt = `${card.iHave} card`;
 img.className = "playerCard cardInPile";
 img.draggable = true;
 img.dataset.cardId = card.id;
-img.style.width = inOverlay ? "142px" : "160px";
-img.style.height = inOverlay ? "142px" : "160px";
+img.style.width = inOverlay ? "132px" : "126px";
+img.style.height = inOverlay ? "185px" : "176px";
 img.style.objectFit = "contain";
 img.addEventListener('dragstart', handleDragStart);
 img.addEventListener('dragend', handleDragEnd);
@@ -971,14 +1700,14 @@ const card = cardMap[cardId];
 if(card){
 // Create image element that IS the card
 const img = document.createElement("img");
-img.src = CARD_IMAGES.ihave[card.iHave] || "";
-img.alt = card.iHave;
+setCardImageSource(img, card, "ihave");
+img.alt = `${card.iHave} card`;
 img.className = "playerCard cardInPile";
 img.dataset.cardId = card.id;
 
 // Match square source artwork to avoid browser distortion.
-img.style.width = "104px";
-img.style.height = "104px";
+img.style.width = "90px";
+img.style.height = "126px";
 img.style.objectFit = "contain";
 img.style.cursor = "default";
 img.style.opacity = "0.9";
@@ -997,14 +1726,14 @@ opponentHand.forEach(card => {
 if(!placedCards.has(String(card.id))){
 // Create image element that IS the card
 const img = document.createElement("img");
-img.src = CARD_IMAGES.ihave[card.iHave] || "";
-img.alt = card.iHave;
+setCardImageSource(img, card, "ihave");
+img.alt = `${card.iHave} card`;
 img.className = "playerCard cardInPile";
 img.dataset.cardId = card.id;
 
 // Match square source artwork to avoid browser distortion.
-img.style.width = "104px";
-img.style.height = "104px";
+img.style.width = "90px";
+img.style.height = "126px";
 img.style.objectFit = "contain";
 img.style.cursor = "default";
 img.style.opacity = "0.9";
@@ -1305,7 +2034,7 @@ surface.dataset.cardId = card.id;
 surface.dataset.playedBy = playedBy || "";
 surfaceImg.className = "";
 surfaceImg.removeAttribute("style");
-surfaceImg.src = CARD_IMAGES.ihave[card.iHave] || surfaceImg.src;
+setCardImageSource(surfaceImg, card, "ihave");
 surfaceImg.alt = card.iHave;
 removeCenterSurface();
 surface.appendChild(surfaceImg);
@@ -1455,7 +2184,7 @@ width: fallbackSize,
 height: fallbackSize
 };
 clone = document.createElement("img");
-clone.src = CARD_IMAGES.ihave[card.iHave] || "";
+setCardImageSource(clone, card, "ihave");
 clone.alt = card.iHave || "blocked card";
 console.warn("Blocked card source missing; using area fallback", {
 cardId: card && card.id,
@@ -2106,15 +2835,19 @@ removeCenterSurface();
 document.querySelector(".deckFront").innerHTML="";
 document.querySelector(".deckBack").innerHTML="";
 chainText.innerHTML="";
+setCenterPrompt(null);
+centerChainHistory = [];
+lastRenderedChainCardId = null;
+lastVisibleChain = null;
+renderCenterChainHistory();
 }
 
 function renderChainDisplay(chain){
 const deckFront=document.querySelector(".deckFront");
 const deckBack=document.querySelector(".deckBack");
 if(!deckFront || !deckBack) return;
+rememberChainCard(chain);
 
-const iHaveImg = CARD_IMAGES.ihave[chain.iHave];
-const whoHasImg = CARD_IMAGES.whas[chain.whoHas];
 const waitingForIncomingCard = !chain.flipped && centerRevealAt && Date.now() < centerRevealAt && String(centerRevealCardId) === String(chain.cardId);
 
 if(delayedCenterRenderTimer){
@@ -2127,6 +2860,7 @@ deck.classList.add("instantFaceReset");
 deck.classList.remove("canFlip");
 deckFront.innerHTML = "";
 chainText.innerHTML = "";
+setCenterPrompt(null);
 delayedCenterRenderTimer = setTimeout(() => {
 delayedCenterRenderTimer = null;
 centerRevealAt = 0;
@@ -2136,17 +2870,12 @@ renderChainDisplay(chain);
 return;
 }
 
-const centerSurface = getCenterSurface();
-const centerSurfaceMatches = centerSurface && String(centerSurface.dataset.cardId) === String(chain.cardId);
-deckFront.innerHTML = centerSurfaceMatches ? "" : (iHaveImg ?
-`<img src="${iHaveImg}" alt="${chain.iHave}">` :
-`<b>I HAVE</b><br>${chain.iHave}`);
+deckFront.innerHTML = cardImgHtml(chain, "ihave");
 
-deckBack.innerHTML = chain.flipped && whoHasImg ?
-`<img src="${whoHasImg}" alt="${chain.whoHas}">` :
-(chain.flipped ? `<b>WHO HAS</b><br>${chain.whoHas}?` : "");
+deckBack.innerHTML = chain.flipped ? cardImgHtml(chain, "whas") : "";
 
 if(chain.flipped){
+setCenterPrompt(chain);
 decayCenterSurface();
 deck.classList.remove("instantFaceReset");
 deck.classList.add("flipped");
@@ -2154,6 +2883,7 @@ deck.classList.remove("canFlip");
 deck.classList.remove("centerReplacing");
 chainText.innerHTML="Find and play your card!";
 } else {
+setCenterPrompt(chain);
 deck.classList.remove("centerReplacing");
 deck.classList.add("instantFaceReset");
 deck.classList.remove("flipped");
@@ -2278,6 +3008,11 @@ removeCenterSurface();
 document.querySelector(".deckFront").innerHTML="";
 document.querySelector(".deckBack").innerHTML="";
 chainText.innerHTML="";
+setCenterPrompt(null);
+centerChainHistory = [];
+lastRenderedChainCardId = null;
+lastVisibleChain = null;
+renderCenterChainHistory();
 }
 
 if(data.state !== "playing"){
@@ -2723,16 +3458,18 @@ activeMovementClones.has(blockedKey) ||
 String(pendingCardId) === String(card.id) ||
 String(localMovementStartedFor) === String(card.id)
 );
-if(isOwnActiveCard && (!blockedByPlayerId || blockedByPlayerId === playerId || ["awaiting_flip", "battle_active", "pending_play"].includes(reason))){
+if(isOwnActiveCard && (!blockedByPlayerId || (blockedByPlayerId === playerId && ["pending_play"].includes(reason)))){
 console.warn("Ignoring self-block for active moving card:", reason || "unknown", blockedByPlayerId || "unknown blocker");
 return;
 }
 setFlowPhase(FLOW_PHASES.NEAR_BLOCK);
 if(blockedPlayerId === playerId){
-markMovementBlocked(pendingCardId || card.id, playerId);
 clearPendingPlayVisuals();
 }
 animateBlockedCardToCenter(card, blockedPlayerId, `server_${reason || "blocked"}_by_${blockedByPlayerId || "unknown"}`);
+if(blockedPlayerId === playerId){
+markMovementBlocked(card.id, playerId);
+}
 setTimeout(() => {
 if(!battleState && (!currentChain || currentChain.flipped)){
 setFlowPhase(FLOW_PHASES.HAND_READY);
@@ -2758,17 +3495,17 @@ if(playId && playId !== activePlayId){
 console.warn("Ignoring stale play rejection:", playId, "current:", activePlayId);
 return;
 }
-if(reason === "center_reserved" && blockedByPlayerId && blockedByPlayerId !== playerId){
-console.warn("Center reserved by opponent; waiting for block animation event");
+if(["center_reserved", "awaiting_flip", "battle_active"].includes(reason)){
+console.warn("Server rejected moving card; waiting for block animation event", reason);
 const fallbackPendingCardId = pendingCardId;
 setTimeout(() => {
 if(pendingCardId === null || String(pendingCardId) !== String(fallbackPendingCardId)) return;
 const fallbackCard = myHand.find(c => String(c.id) === String(fallbackPendingCardId));
 if(!fallbackCard) return;
-console.warn("Block animation event fallback triggered for center_reserved");
-markMovementBlocked(fallbackPendingCardId, playerId);
+console.warn("Block animation event fallback triggered for", reason);
 clearPendingPlayVisuals();
 animateBlockedCardToCenter(fallbackCard, playerId, `play_rejected_${reason}_fallback`);
+markMovementBlocked(fallbackPendingCardId, playerId);
 if(!battleState && (!currentChain || currentChain.flipped)){
 setFlowPhase(FLOW_PHASES.HAND_READY);
 }
