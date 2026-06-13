@@ -627,53 +627,24 @@ body.in-game #app{
   flex-direction:column;
 }
 #logo{
-  width:auto;
+  width:214px;
   height:auto;
-  min-width:214px;
-  padding:10px 16px 10px 12px;
-  gap:10px;
-  border-radius:22px;
-  background:#fffaf0;
-  color:var(--links-ink);
-  font-family:Arial Rounded MT Bold, Arial, Helvetica, sans-serif;
-  font-size:36px;
-  line-height:1;
-  box-shadow:0 14px 30px rgba(23,50,77,.14), inset 0 0 0 3px rgba(255,255,255,.75);
-}
-.logoMark{
-  width:74px;
-  height:38px;
-  overflow:visible;
-}
-.logoLoop{
-  fill:none;
-  stroke-linecap:round;
-  stroke-linejoin:round;
-  stroke-width:12;
-}
-.logoLoopCoral{stroke:#ff6b6b;}
-.logoLoopTeal{stroke:#16b7a7;stroke-dasharray:92 92;stroke-dashoffset:-92;}
-.logoClasp{
-  fill:#ffd166;
-  stroke:#17324d;
-  stroke-width:3;
+  padding:0;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+  display:block;
+  margin:0 auto 10px;
 }
 #logo::after{content:none;}
 body.in-game #logo{
   position:absolute;
   left:20px;
   top:18px;
-  width:auto;
+  width:150px;
   height:auto;
-  min-width:150px;
-  padding:8px 12px 8px 10px;
-  font-size:26px;
-  border-radius:18px;
+  padding:0;
   z-index:120;
-}
-body.in-game .logoMark{
-  width:52px;
-  height:28px;
 }
 body.in-game #game{
   flex:1;
@@ -894,14 +865,7 @@ body.in-game #gameSidebar{display:flex;}
 </div>
 
 <div id="app">
-<div id="logo" role="img" aria-label="LINKS">
-<svg class="logoMark" viewBox="0 0 96 48" aria-hidden="true">
-<path class="logoLoop logoLoopCoral" d="M10 24 C10 8 30 8 48 24 C66 40 86 40 86 24 C86 8 66 8 48 24 C30 40 10 40 10 24 Z"/>
-<path class="logoLoop logoLoopTeal" d="M48 24 C66 8 86 8 86 24 C86 40 66 40 48 24 C30 8 10 8 10 24 C10 40 30 40 48 24 Z"/>
-<circle class="logoClasp" cx="48" cy="24" r="8"/>
-</svg>
-<span>LINKS</span>
-</div>
+<img id="logo" src="assets/ui/links-logo.svg" alt="LINKS">
 <h1>LINKS</h1>
 
 <div id="home">

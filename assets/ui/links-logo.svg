@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 230" role="img" aria-labelledby="title desc">
+  <title id="title">LINKS logo</title>
+  <desc id="desc">A playful LINKS wordmark with a two-color continuous infinity link.</desc>
+  <defs>
+    <filter id="softShadow" x="-12%" y="-24%" width="124%" height="148%">
+      <feDropShadow dx="0" dy="13" stdDeviation="11" flood-color="#17324d" flood-opacity=".16"/>
+    </filter>
+    <linearGradient id="paper" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#fffdf6"/>
+      <stop offset="1" stop-color="#fff3d7"/>
+    </linearGradient>
+    <linearGradient id="coral" x1=".08" x2=".92" y1=".08" y2=".92">
+      <stop offset="0" stop-color="#ff8a5c"/>
+      <stop offset=".56" stop-color="#ff634d"/>
+      <stop offset="1" stop-color="#ea4b43"/>
+    </linearGradient>
+    <linearGradient id="teal" x1=".08" x2=".92" y1=".08" y2=".92">
+      <stop offset="0" stop-color="#35d8c2"/>
+      <stop offset=".58" stop-color="#16b7a7"/>
+      <stop offset="1" stop-color="#0c8f8d"/>
+    </linearGradient>
+  </defs>
+
+  <g filter="url(#softShadow)">
+    <rect x="24" y="28" width="592" height="174" rx="46" fill="url(#paper)"/>
+    <rect x="31" y="35" width="578" height="160" rx="40" fill="none" stroke="#ffffff" stroke-width="8"/>
+  </g>
+
+  <g transform="translate(72 56)">
+    <path d="M12 58C12 22 55 20 94 58C132 96 175 94 175 58C175 22 132 20 94 58C55 96 12 94 12 58Z"
+      fill="none" stroke="#17324d" stroke-width="31" stroke-linecap="round" stroke-linejoin="round" opacity=".13"/>
+    <path d="M12 58C12 22 55 20 94 58C132 96 175 94 175 58C175 22 132 20 94 58C55 96 12 94 12 58Z"
+      fill="none" stroke="url(#coral)" stroke-width="25" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M94 58C132 20 175 22 175 58C175 94 132 96 94 58C55 20 12 22 12 58C12 94 55 96 94 58Z"
+      fill="none" stroke="url(#teal)" stroke-width="25" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="190 190" stroke-dashoffset="-190"/>
+    <circle cx="94" cy="58" r="19" fill="#ffd166" stroke="#17324d" stroke-width="7"/>
+    <circle cx="94" cy="58" r="7" fill="#fffaf0"/>
+  </g>
+
+  <g transform="translate(276 60)">
+    <text x="0" y="95"
+      fill="#17324d"
+      stroke="#17324d"
+      stroke-width="3"
+      paint-order="stroke fill"
+      font-family="Arial Rounded MT Bold, Trebuchet MS, Arial, sans-serif"
+      font-size="92"
+      font-weight="900"
+      letter-spacing="0">LINKS</text>
+    <circle cx="324" cy="31" r="8" fill="#ff6b4d"/>
+    <circle cx="350" cy="56" r="7" fill="#16b7a7"/>
+    <circle cx="313" cy="116" r="6" fill="#ffd166"/>
+  </g>
+</svg>
