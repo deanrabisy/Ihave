@@ -871,6 +871,91 @@ body.in-game #gameSidebar{display:flex;}
   body:not(.in-game) #logo{width:min(320px, 82vw);}
   body:not(.in-game) #logo .logoWide{display:block;}
 }
+
+html,body{
+  height:100%;
+  overflow:hidden;
+}
+body.in-game{
+  width:100vw;
+  height:100vh;
+  align-items:stretch;
+}
+body.in-game #app{
+  width:100vw;
+  height:100vh;
+  padding:0;
+  border:0;
+  border-radius:0;
+  box-shadow:none;
+  background:
+    radial-gradient(circle at 18% 16%, rgba(255,188,44,.22), transparent 24%),
+    radial-gradient(circle at 82% 18%, rgba(0,166,166,.2), transparent 26%),
+    linear-gradient(135deg,#fff8e8 0%,#f7fbf2 42%,#e7f7f3 100%);
+  overflow:hidden;
+}
+body.in-game #app::before{content:none;}
+body.in-game #game{
+  height:100%;
+}
+body.in-game #board{
+  height:100%;
+  padding:clamp(8px, 1vw, 14px);
+  border-radius:0;
+  box-shadow:none;
+  background:
+    radial-gradient(circle at 50% 48%, rgba(255,255,255,.72) 0 15%, rgba(255,255,255,.28) 35%, transparent 56%),
+    linear-gradient(180deg,rgba(255,246,220,.62),rgba(226,247,241,.72));
+  grid-template-rows:minmax(96px, .78fr) minmax(200px, 1.34fr) minmax(150px, .98fr);
+}
+body.in-game #logo{
+  left:16px;
+  top:14px;
+  width:84px;
+}
+#centerPrompt{
+  margin-bottom:7px;
+  font-family:"Arial Rounded MT Bold","Trebuchet MS",Arial,sans-serif;
+}
+#countdownOverlay{
+  background:radial-gradient(circle at 50% 42%, rgba(255,188,44,.22), rgba(255,248,232,.82) 38%, rgba(0,166,166,.28));
+}
+#countdownText{
+  color:#082b45;
+  text-shadow:0 8px 0 rgba(255,188,44,.58), 0 18px 42px rgba(8,43,69,.24);
+}
+#readyPanel{
+  top:auto;
+  bottom:clamp(18px, 5vh, 48px);
+  transform:translateX(-50%);
+  z-index:360;
+}
+#cardOverlay{
+  top:44%;
+  transform:translate(-50%, -50%);
+  max-height:min(48vh, 340px);
+}
+#overlayCards{
+  overflow:visible;
+}
+#playerPilesTop .pile::after{
+  opacity:0;
+  bottom:calc(var(--card-h) * -.14);
+  left:8px;
+  right:8px;
+  height:7px;
+  transition:opacity .12s ease, transform .12s ease;
+}
+#playerPilesTop .pile.dragOver::after{
+  opacity:1;
+  transform:scaleX(.9);
+}
+.pile:not(.communal) .cardInPile{
+  margin-top:calc(var(--card-h) * -.62);
+}
+#opponentPilesTop .pile:not(.communal) .cardInPile{
+  margin-top:calc(var(--opp-card-h) * -.58);
+}
 </style>
 </head>
 <body>
@@ -2785,7 +2870,7 @@ renderHand();
 // Hide battle screen
 document.getElementById("battleScreen").style.display = "none";
 document.getElementById("battleScreen").classList.remove("battlePress", "visible");
-document.body.style.overflow = "auto";
+document.body.style.overflow = "";
 battleState = null;
 battleClicks = 0;
 }
@@ -2829,7 +2914,7 @@ setFlowPhase(FLOW_PHASES.ARRANGING);
 
 document.getElementById("battleScreen").style.display = "none";
 document.getElementById("battleScreen").classList.remove("battlePress", "visible");
-document.body.style.overflow = "auto";
+document.body.style.overflow = "";
 document.getElementById("roundWinnerOverlay").style.display = "none";
 document.getElementById("winnerAnnouncement").style.opacity = "0";
 document.getElementById("overlayCards").innerHTML = "";
