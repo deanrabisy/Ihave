@@ -500,7 +500,7 @@ button:hover{background:linear-gradient(135deg,#0fa493,var(--links-blue));}
 #deck.canFlip{
   animation:centerLinkReady 1.25s ease-in-out infinite;
 }
-@keyframes centerLinkReady{0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-4px) scale(1.025);}}
+@keyframes centerLinkReady{0%,100%{transform:translate(clamp(0px, 1.6vw, 22px),0) scale(1);}50%{transform:translate(clamp(0px, 1.6vw, 22px),-4px) scale(1.025);}}
 .deckFront,.deckBack{padding:0;overflow:visible;}
 .deckFront img,.deckBack img,.centerCardSurface img{
   width:178px;
@@ -876,6 +876,14 @@ html,body{
   height:100%;
   overflow:hidden;
 }
+:root{
+  --links-ink:#082b45;
+  --links-teal:#0ca6aa;
+  --links-coral:#ff514f;
+  --links-yellow:#ffbc2c;
+  --links-lime:#b8d51d;
+  --links-paper:#fff9ed;
+}
 body.in-game{
   width:100vw;
   height:100vh;
@@ -916,6 +924,8 @@ body.in-game #logo{
 #centerPrompt{
   margin-bottom:7px;
   font-family:"Arial Rounded MT Bold","Trebuchet MS",Arial,sans-serif;
+  font-weight:900;
+  letter-spacing:0;
 }
 #countdownOverlay{
   background:radial-gradient(circle at 50% 42%, rgba(255,188,44,.22), rgba(255,248,232,.82) 38%, rgba(0,166,166,.28));
@@ -955,6 +965,50 @@ body.in-game #logo{
 }
 #opponentPilesTop .pile:not(.communal) .cardInPile{
   margin-top:calc(var(--opp-card-h) * -.58);
+}
+#centerChainStage{
+  width:min(980px, calc(100vw - 190px));
+  justify-content:flex-end;
+  padding-right:clamp(18px, 3vw, 46px);
+  box-sizing:border-box;
+}
+#chainHistory{
+  left:0;
+  top:50%;
+  width:calc(100% - var(--center-card-w) - 84px);
+  height:calc(var(--center-card-h) * 1.35);
+  transform:translateY(-50%);
+  border-radius:999px;
+  background:rgba(255,255,255,.24);
+}
+#chainHistory::before{
+  content:"";
+  position:absolute;
+  left:4%;
+  right:3%;
+  top:50%;
+  height:8px;
+  transform:translateY(-50%);
+  border-radius:999px;
+  background:linear-gradient(90deg,rgba(255,188,44,.18),rgba(255,188,44,.78),rgba(12,166,170,.38));
+  box-shadow:0 4px 12px rgba(8,43,69,.08);
+}
+.chainHistoryCard{
+  opacity:1;
+  z-index:3;
+}
+.chainConnector{
+  z-index:2;
+}
+#deck{
+  transform:translateX(clamp(0px, 1.6vw, 22px));
+}
+#deck.canFlip{
+  animation:centerLinkReady 1.25s ease-in-out infinite;
+}
+@media (max-width:900px){
+  #centerChainStage{width:94vw;padding-right:10px;}
+  #chainHistory{width:calc(100% - var(--center-card-w) - 44px);transform:translateY(-50%);}
 }
 </style>
 </head>
@@ -1205,23 +1259,23 @@ let centerChainHistory = [];
 let lastRenderedChainCardId = null;
 let lastVisibleChain = null;
 const CHAIN_PATH = [
-  {x:"12%", y:"50%", r:"-7deg", s:.5},
-  {x:"25%", y:"27%", r:"8deg", s:.52},
-  {x:"40%", y:"50%", r:"-5deg", s:.54},
-  {x:"55%", y:"73%", r:"7deg", s:.54},
-  {x:"70%", y:"50%", r:"-6deg", s:.52},
-  {x:"55%", y:"27%", r:"8deg", s:.5},
-  {x:"40%", y:"50%", r:"-5deg", s:.52},
-  {x:"25%", y:"73%", r:"7deg", s:.5}
+  {x:"7%", y:"50%", r:"-3deg", s:.48},
+  {x:"20%", y:"40%", r:"2deg", s:.49},
+  {x:"33%", y:"50%", r:"-2deg", s:.5},
+  {x:"46%", y:"60%", r:"2deg", s:.51},
+  {x:"59%", y:"50%", r:"-2deg", s:.52},
+  {x:"72%", y:"40%", r:"2deg", s:.53},
+  {x:"85%", y:"50%", r:"-2deg", s:.54},
+  {x:"96%", y:"56%", r:"2deg", s:.55}
 ];
 const CHAIN_CONNECTOR_PATH = [
-  {x:"18.5%", y:"38.5%", r:"-28deg"},
-  {x:"32.5%", y:"38.5%", r:"28deg"},
-  {x:"47.5%", y:"61.5%", r:"28deg"},
-  {x:"62.5%", y:"61.5%", r:"-28deg"},
-  {x:"62.5%", y:"38.5%", r:"28deg"},
-  {x:"47.5%", y:"38.5%", r:"-28deg"},
-  {x:"32.5%", y:"61.5%", r:"-28deg"}
+  {x:"13.5%", y:"45%", r:"-10deg"},
+  {x:"26.5%", y:"45%", r:"10deg"},
+  {x:"39.5%", y:"55%", r:"10deg"},
+  {x:"52.5%", y:"55%", r:"-10deg"},
+  {x:"65.5%", y:"45%", r:"-10deg"},
+  {x:"78.5%", y:"45%", r:"10deg"},
+  {x:"91%", y:"53%", r:"8deg"}
 ];
 
 function escapeSvgText(value){
@@ -1430,6 +1484,7 @@ let flowPhase = FLOW_PHASES.ARRANGING;
 const activeMovementKeys = new Set();
 const canceledMovementKeys = new Set();
 const activeMovementClones = new Map();
+const movementStateCleanupTimers = new Map();
 let deckRejectTimers = [];
 let battleImpactTimer = null;
 let cardImagesPreloaded = false;
@@ -1530,11 +1585,25 @@ function movementKey(card, playedBy){
 return `${playedBy || "unknown"}:${card && card.id}`;
 }
 
+function holdMovementState(key, delay=CARD_TRAVEL_MS + 280){
+if(movementStateCleanupTimers.has(key)){
+clearTimeout(movementStateCleanupTimers.get(key));
+}
+const timer = setTimeout(() => {
+movementStateCleanupTimers.delete(key);
+canceledMovementKeys.delete(key);
+blockedMovementKeys.delete(key);
+if(!activeMovementClones.has(key)) activeMovementKeys.delete(key);
+}, delay);
+movementStateCleanupTimers.set(key, timer);
+}
+
 function cancelMovement(cardId, playedBy){
 if(cardId === undefined || cardId === null) return;
 const key = movementKey({id: cardId}, playedBy);
 canceledMovementKeys.add(key);
 blockedMovementKeys.add(key);
+holdMovementState(key);
 const clone = activeMovementClones.get(key);
 if(clone && clone.parentNode) clone.remove();
 activeMovementClones.delete(key);
@@ -1557,6 +1626,7 @@ if(cardId === undefined || cardId === null) return;
 const key = movementKey({id: cardId}, playedBy);
 canceledMovementKeys.add(key);
 blockedMovementKeys.add(key);
+holdMovementState(key);
 activeMovementKeys.delete(key);
 deck.querySelectorAll(`.centerCardSurface[data-card-id="${cardId}"]`).forEach(surface => {
 if(!playedBy || surface.dataset.playedBy === playedBy) surface.remove();
@@ -1890,6 +1960,7 @@ return;
 const phaseBlocksLocalClick = [
 FLOW_PHASES.ARRANGING,
 FLOW_PHASES.COUNTDOWN,
+FLOW_PHASES.NEAR_BLOCK,
 FLOW_PHASES.BATTLE_INTRO,
 FLOW_PHASES.BATTLE_ACTIVE
 ].includes(flowPhase);
@@ -2058,7 +2129,18 @@ return Math.min(2.25, Math.max(0.72, CENTER_CARD_COVER_SIZE / sourceSize));
 
 function animateCardToCenter(card, playedBy){
 const key = movementKey(card, playedBy);
-if(activeMovementKeys.has(key)) return true;
+const existingClone = activeMovementClones.get(key);
+if(activeMovementKeys.has(key)){
+if(existingClone && document.body.contains(existingClone)) return true;
+activeMovementKeys.delete(key);
+activeMovementClones.delete(key);
+}
+canceledMovementKeys.delete(key);
+blockedMovementKeys.delete(key);
+if(movementStateCleanupTimers.has(key)){
+clearTimeout(movementStateCleanupTimers.get(key));
+movementStateCleanupTimers.delete(key);
+}
 const source = findVisibleCardElement(card.id, playedBy);
 const target = deck;
 if(!source || !target){
@@ -2910,6 +2992,8 @@ activeMovementKeys.clear();
 canceledMovementKeys.clear();
 activeMovementClones.clear();
 blockedMovementKeys.clear();
+movementStateCleanupTimers.forEach(timer => clearTimeout(timer));
+movementStateCleanupTimers.clear();
 setFlowPhase(FLOW_PHASES.ARRANGING);
 
 document.getElementById("battleScreen").style.display = "none";
