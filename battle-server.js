@@ -17,7 +17,7 @@ const io = new Server(server, {
 // Store active rooms and their state
 const rooms = {};
 
-const BATTLE_WINDOW_MS = 450; // Race-click window for battle interception
+const BATTLE_WINDOW_MS = 330; // Race-click window for battle interception
 const AUTO_PLAY_DELAY_MS = BATTLE_WINDOW_MS + 20; // Give edge-of-window plays time to arrive
 const BATTLE_INTRO_MS = 1500; // Clear multi-hit collision beat before clicking starts
 const PENDING_STALE_MS = AUTO_PLAY_DELAY_MS + 500;
