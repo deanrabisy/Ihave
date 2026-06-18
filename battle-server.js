@@ -21,6 +21,7 @@ const BATTLE_WINDOW_MS = 330; // Race-click window for battle interception
 const AUTO_PLAY_DELAY_MS = BATTLE_WINDOW_MS + 20; // Give edge-of-window plays time to arrive
 const BATTLE_INTRO_MS = 1500; // Clear multi-hit collision beat before clicking starts
 const PENDING_STALE_MS = AUTO_PLAY_DELAY_MS + 500;
+const BATTLE_STALE_MS = 12000;
 let battleSequence = 0;
 
 function emitBlockedPlay(roomId, playerId, card, reason, blockedByPlayerId = null, playId = null) {
@@ -71,7 +72,7 @@ io.on('connection', (socket) => {
   });
 
   // Card played - check for battle
-  socket.on('card_played', ({ roomId, playerId, card, isHost, playId }) => {
+  socket.on('card_played', ({ roomId, playerId, card, isHost, playId, chainFlipped }) => {
     console.log(`\n========== CARD PLAYED ==========`);
     console.log(`Player: ${playerId}`);
     console.log(`Room: ${roomId}`);
@@ -87,6 +88,21 @@ io.on('connection', (socket) => {
 
     const now = Date.now();
     console.log(`Received at: ${now}`);
+
+    if (room.activeBattle) {
+      const battleCreatedAt = Number(room.activeBattle.startTime || now) - Number(room.activeBattle.introMs || 0);
+      if (now - battleCreatedAt > BATTLE_STALE_MS) {
+        console.log(`Clearing stale battle in room ${roomId}`);
+        room.activeBattle = null;
+        clearPendingPlays(room);
+      }
+    }
+
+    if (room.awaitingFlip && chainFlipped === true) {
+      console.log(`Client chain is already flipped; resynchronizing room ${roomId}`);
+      room.awaitingFlip = false;
+      clearPendingPlays(room);
+    }
 
     const rejectPlay = (reason, broadcastBlock = false) => {
       console.log(`Rejecting play from ${playerId}: ${reason}`);

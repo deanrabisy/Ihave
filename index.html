@@ -935,10 +935,12 @@ body.in-game #logo{
   text-shadow:0 8px 0 rgba(255,188,44,.58), 0 18px 42px rgba(8,43,69,.24);
 }
 #readyPanel{
-  top:auto;
-  bottom:clamp(18px, 5vh, 48px);
-  transform:translateX(-50%);
+  top:44%;
+  bottom:auto;
+  transform:translate(-50%, -50%);
   z-index:360;
+  min-width:min(360px, calc(100vw - 40px));
+  justify-content:center;
 }
 #cardOverlay{
   top:44%;
@@ -949,16 +951,16 @@ body.in-game #logo{
   overflow:visible;
 }
 #playerPilesTop .pile::after{
-  opacity:0;
-  bottom:calc(var(--card-h) * -.14);
-  left:8px;
-  right:8px;
-  height:7px;
-  transition:opacity .12s ease, transform .12s ease;
+  content:none;
 }
 #playerPilesTop .pile.dragOver::after{
-  opacity:1;
-  transform:scaleX(.9);
+  content:none;
+}
+#playerPilesTop .pile.dragOver{
+  outline:3px solid var(--links-yellow);
+  outline-offset:8px;
+  background:rgba(255,188,44,.12);
+  box-shadow:0 0 0 6px rgba(12,166,170,.12),0 10px 24px rgba(8,43,69,.1);
 }
 .pile:not(.communal) .cardInPile{
   margin-top:calc(var(--card-h) * -.62);
@@ -984,14 +986,24 @@ body.in-game #logo{
 #chainHistory::before{
   content:"";
   position:absolute;
-  left:4%;
-  right:3%;
+  inset:4%;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M92 50 C82 8 58 8 50 50 C42 92 18 92 8 50 C18 8 42 8 50 50 C58 92 82 92 92 50' fill='none' stroke='%23ffbc2c' stroke-opacity='.62' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-size:100% 100%;
+  background-repeat:no-repeat;
+  filter:drop-shadow(0 4px 8px rgba(8,43,69,.1));
+}
+#chainHistory::after{
+  content:"";
+  position:absolute;
+  right:-48px;
   top:50%;
-  height:8px;
+  width:54px;
+  height:26px;
   transform:translateY(-50%);
-  border-radius:999px;
-  background:linear-gradient(90deg,rgba(255,188,44,.18),rgba(255,188,44,.78),rgba(12,166,170,.38));
-  box-shadow:0 4px 12px rgba(8,43,69,.08);
+  background:
+    radial-gradient(ellipse at 32% 50%,transparent 0 24%,var(--links-yellow) 27% 42%,transparent 45%),
+    radial-gradient(ellipse at 68% 50%,transparent 0 24%,var(--links-yellow) 27% 42%,transparent 45%);
+  filter:drop-shadow(0 3px 5px rgba(8,43,69,.15));
 }
 .chainHistoryCard{
   opacity:1;
@@ -1259,23 +1271,31 @@ let centerChainHistory = [];
 let lastRenderedChainCardId = null;
 let lastVisibleChain = null;
 const CHAIN_PATH = [
-  {x:"7%", y:"50%", r:"-3deg", s:.48},
-  {x:"20%", y:"40%", r:"2deg", s:.49},
-  {x:"33%", y:"50%", r:"-2deg", s:.5},
-  {x:"46%", y:"60%", r:"2deg", s:.51},
-  {x:"59%", y:"50%", r:"-2deg", s:.52},
-  {x:"72%", y:"40%", r:"2deg", s:.53},
-  {x:"85%", y:"50%", r:"-2deg", s:.54},
-  {x:"96%", y:"56%", r:"2deg", s:.55}
+  {x:"92%", y:"50%", r:"0deg", s:.56},
+  {x:"82%", y:"25%", r:"-4deg", s:.54},
+  {x:"64%", y:"18%", r:"3deg", s:.52},
+  {x:"47%", y:"45%", r:"-2deg", s:.51},
+  {x:"36%", y:"82%", r:"3deg", s:.5},
+  {x:"18%", y:"75%", r:"-4deg", s:.49},
+  {x:"8%", y:"50%", r:"0deg", s:.48},
+  {x:"18%", y:"25%", r:"4deg", s:.48},
+  {x:"36%", y:"18%", r:"-3deg", s:.49},
+  {x:"53%", y:"55%", r:"2deg", s:.5},
+  {x:"64%", y:"82%", r:"-3deg", s:.51},
+  {x:"82%", y:"75%", r:"4deg", s:.52}
 ];
 const CHAIN_CONNECTOR_PATH = [
-  {x:"13.5%", y:"45%", r:"-10deg"},
-  {x:"26.5%", y:"45%", r:"10deg"},
-  {x:"39.5%", y:"55%", r:"10deg"},
-  {x:"52.5%", y:"55%", r:"-10deg"},
-  {x:"65.5%", y:"45%", r:"-10deg"},
-  {x:"78.5%", y:"45%", r:"10deg"},
-  {x:"91%", y:"53%", r:"8deg"}
+  {x:"87%", y:"37%", r:"-24deg"},
+  {x:"73%", y:"21%", r:"-6deg"},
+  {x:"57%", y:"34%", r:"24deg"},
+  {x:"43%", y:"66%", r:"24deg"},
+  {x:"27%", y:"79%", r:"-6deg"},
+  {x:"13%", y:"63%", r:"-24deg"},
+  {x:"13%", y:"37%", r:"24deg"},
+  {x:"27%", y:"21%", r:"6deg"},
+  {x:"43%", y:"34%", r:"-24deg"},
+  {x:"57%", y:"66%", r:"-24deg"},
+  {x:"73%", y:"79%", r:"6deg"}
 ];
 
 function escapeSvgText(value){
@@ -1310,7 +1330,7 @@ function renderCenterChainHistory(){
 const historyEl = document.getElementById("chainHistory");
 if(!historyEl) return;
 historyEl.innerHTML = "";
-const visibleHistory = centerChainHistory.slice(-CHAIN_PATH.length);
+const visibleHistory = centerChainHistory.slice(-CHAIN_PATH.length).reverse();
 visibleHistory.forEach((entry, index) => {
 if(index > 0){
 const connector = document.createElement("span");
@@ -2064,7 +2084,8 @@ roomId: roomId,
 playerId: playerId,
 card: card,
 isHost: isHost,
-playId: activePlayId
+playId: activePlayId,
+chainFlipped: Boolean(currentChain && currentChain.flipped)
 });
 schedulePendingPlayWatchdog(card, activePlayId);
 
@@ -3384,6 +3405,12 @@ const ready = roomData.organizationReady || {};
 const myReady = ready[playerId] === true || localReadySubmitted;
 if(ready[playerId] === true) localReadySubmitted = true;
 const organized = isMyOrganizationComplete();
+const arrangementVisible = document.getElementById("cardOverlay").classList.contains("visible");
+
+if(!organized || arrangementVisible){
+panel.style.display = "none";
+return;
+}
 
 if(myReady){
 panel.style.display = areAllPlayersReady(roomData) ? "none" : "flex";
@@ -3408,7 +3435,7 @@ return;
 localReadySubmitted = true;
 document.getElementById("readyBtn").disabled = true;
 document.getElementById("readyStatus").textContent = "Waiting for the other player";
-document.getElementById("readyPanel").style.display = "none";
+document.getElementById("readyPanel").style.display = "flex";
 const roomSnap = await get(ref(db,"rooms/"+roomId));
 const roomData = roomSnap.val();
 if(roomData){
@@ -3601,6 +3628,11 @@ socket.on('connect', () => {
 console.log('Connected to battle server, socket ID:', socket.id);
 socket.emit('join_room', { roomId, playerId, isHost });
 console.log('Sent join_room:', { roomId, playerId, isHost });
+lastSocketChainStateKey = null;
+setTimeout(() => {
+const chainToSync = currentChain || (latestRoomData && latestRoomData.chain);
+if(chainToSync) syncSocketChainState(chainToSync);
+}, 0);
 });
 
 socket.on('connect_error', (error) => {
@@ -3609,6 +3641,7 @@ console.error('Connection error:', error);
 
 socket.on('disconnect', (reason) => {
 console.warn('Disconnected from battle server:', reason);
+lastSocketChainStateKey = null;
 });
 
 socket.on('battle_start', (battle) => {
