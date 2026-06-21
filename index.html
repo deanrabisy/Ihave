@@ -950,25 +950,24 @@ body.in-game #logo{
   overflow:visible;
 }
 #playerPilesTop .pile::after{
-  content:"↓";
+  content:"";
   position:absolute;
   left:50%;
-  top:calc(100% + var(--stack-tail, 0%) + 6px);
-  width:28px;
-  height:28px;
-  display:grid;
-  place-items:center;
+  top:-36px;
+  width:26px;
+  height:30px;
+  display:block;
   transform:translateX(-50%);
-  border-radius:50%;
   background:var(--links-yellow);
-  color:var(--links-ink);
-  font-size:18px;
-  font-weight:950;
-  line-height:1;
+  clip-path:polygon(34% 0,66% 0,66% 52%,100% 52%,50% 100%,0 52%,34% 52%);
   box-shadow:0 5px 12px rgba(8,43,69,.14),0 0 0 4px rgba(12,166,170,.13);
-  opacity:.72;
+  opacity:0;
   pointer-events:none;
   animation:none;
+  transition:opacity .18s ease,transform .18s ease;
+}
+body.show-pile-guides #playerPilesTop .pile::after{
+  opacity:.72;
 }
 #playerPilesTop .pile.dragOver::after{
   opacity:1;
@@ -980,13 +979,6 @@ body.in-game #logo{
   background:rgba(255,188,44,.12);
   box-shadow:0 0 0 6px rgba(12,166,170,.12),0 10px 24px rgba(8,43,69,.1);
 }
-#playerPilesTop .pile:has(.cardInPile:nth-child(2)){--stack-tail:38%;}
-#playerPilesTop .pile:has(.cardInPile:nth-child(3)){--stack-tail:76%;}
-#playerPilesTop .pile:has(.cardInPile:nth-child(4)){--stack-tail:114%;}
-#playerPilesTop .pile:has(.cardInPile:nth-child(5)){--stack-tail:152%;}
-#playerPilesTop .pile:has(.cardInPile:nth-child(6)){--stack-tail:190%;}
-#playerPilesTop .pile:has(.cardInPile:nth-child(7)){--stack-tail:228%;}
-#playerPilesTop .pile:has(.cardInPile:nth-child(8)){--stack-tail:266%;}
 .pile:not(.communal) .cardInPile{
   margin-top:calc(var(--card-h) * -.62);
 }
@@ -1011,19 +1003,6 @@ body.in-game #logo{
 #chainHistory::before{
   content:none;
 }
-#chainHistory::after{
-  content:"";
-  position:absolute;
-  right:-48px;
-  top:50%;
-  width:54px;
-  height:26px;
-  transform:translateY(-50%);
-  background:
-    radial-gradient(ellipse at 32% 50%,transparent 0 24%,var(--links-yellow) 27% 42%,transparent 45%),
-    radial-gradient(ellipse at 68% 50%,transparent 0 24%,var(--links-yellow) 27% 42%,transparent 45%);
-  filter:drop-shadow(0 3px 5px rgba(8,43,69,.15));
-}
 .chainHistoryCard{
   opacity:1;
   z-index:3;
@@ -1032,6 +1011,11 @@ body.in-game #logo{
 }
 .chainConnector{
   z-index:2;
+}
+.playerCard,.deckFront img,.deckBack img,.centerCardSurface img,.chainHistoryCard{
+  image-rendering:auto;
+  -webkit-backface-visibility:visible;
+  backface-visibility:visible;
 }
 #deck{
   transform:translateX(clamp(0px, 1.6vw, 22px));
@@ -2432,8 +2416,8 @@ if(!targetRect.width || !targetRect.height) return;
 
 const key = movementKey(card, playedBy);
 const movingClone = activeMovementClones.get(key);
-let sourceRect = movingClone && document.body.contains(movingClone) ? movingClone.getBoundingClientRect() : (source ? source.getBoundingClientRect() : null);
-let clone = movingClone && document.body.contains(movingClone) ? movingClone.cloneNode(true) : (source ? source.cloneNode(true) : null);
+let sourceRect = source ? source.getBoundingClientRect() : (movingClone && document.body.contains(movingClone) ? movingClone.getBoundingClientRect() : null);
+let clone = source ? source.cloneNode(true) : (movingClone && document.body.contains(movingClone) ? movingClone.cloneNode(true) : null);
 if(movingClone && document.body.contains(movingClone)){
 movingClone.getAnimations().forEach(animation => animation.cancel());
 movingClone.remove();
@@ -3440,6 +3424,8 @@ function updateReadyPanel(roomData){
 const panel = document.getElementById("readyPanel");
 const button = document.getElementById("readyBtn");
 const status = document.getElementById("readyStatus");
+const showPileGuides = Boolean(roomData && roomData.state === "playing" && !roomData.winner && !roomData.countdownStartedAt && !areAllPlayersReady(roomData));
+document.body.classList.toggle("show-pile-guides", showPileGuides);
 if(!roomData || roomData.state !== "playing" || roomData.winner || hasCountdownFinished(roomData)){
 panel.style.display = "none";
 return;
