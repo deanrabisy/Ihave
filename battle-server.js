@@ -17,8 +17,8 @@ const io = new Server(server, {
 // Store active rooms and their state
 const rooms = {};
 
-const BATTLE_WINDOW_MS = 450; // Race-click window for battle interception
-const AUTO_PLAY_DELAY_MS = BATTLE_WINDOW_MS + 20; // Give edge-of-window plays time to arrive
+const BATTLE_WINDOW_MS = 900; // Race-click window for battle interception
+const AUTO_PLAY_DELAY_MS = BATTLE_WINDOW_MS + 40; // Give edge-of-window plays time to arrive
 const BATTLE_INTRO_MS = 1500; // Clear multi-hit collision beat before clicking starts
 const PENDING_STALE_MS = AUTO_PLAY_DELAY_MS + 500;
 const BATTLE_STALE_MS = 12000;
@@ -145,7 +145,6 @@ io.on('connection', (socket) => {
     
     // Check if another player has a pending play within battle window
     let battleOpponent = null;
-    let blockedByPending = null;
     for (const [pid, pending] of Object.entries(room.pendingPlays)) {
       const age = now - pending.timestamp;
       console.log(`Checking pending play from ${pid}, age: ${age}ms`);
@@ -162,9 +161,7 @@ io.on('connection', (socket) => {
         if (age > PENDING_STALE_MS) {
           console.log(`Clearing stale pending play from ${pid}, age: ${age}ms`);
           clearPendingPlay(room, pid);
-          continue;
         }
-        blockedByPending = { playerId: pid, age };
       }
     }
 
@@ -208,10 +205,6 @@ io.on('connection', (socket) => {
       console.log(`📢 Emitting battle_start to room ${roomId}`);
       io.to(roomId).emit('battle_start', room.activeBattle);
       
-    } else if (blockedByPending) {
-      console.log(`Near click blocked for ${playerId}; ${blockedByPending.playerId} reserved center ${blockedByPending.age}ms ago`);
-      emitBlockedPlay(roomId, playerId, card, 'center_reserved', blockedByPending.playerId, playId);
-      socket.emit('play_rejected', { reason: 'center_reserved', blockedByPlayerId: blockedByPending.playerId, playId });
     } else {
       // No battle - add to pending
       console.log(`No battle opponent found, adding to pending plays`);

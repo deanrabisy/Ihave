@@ -220,8 +220,8 @@ body.battleShake #board{animation:battleScreenShake 1.5s ease-in-out;}
 @keyframes countdownPop{0%{opacity:.15;transform:scale(.72);}22%{opacity:1;transform:scale(1.04);}100%{opacity:.88;transform:scale(1);}}
 #roundWinnerOverlay{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%, -50%);min-width:340px;max-width:min(560px, calc(100vw - 48px));padding:42px 52px;border-radius:18px;z-index:10000;text-align:center;overflow:hidden;background:linear-gradient(145deg, rgba(0,72,112,.98), rgba(35,135,159,.96));box-shadow:0 24px 70px rgba(0,72,112,.42),0 0 0 1px rgba(218,251,233,.42) inset;}
 #roundWinnerOverlay::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 20% 15%, rgba(228,224,154,.32), transparent 34%),radial-gradient(circle at 82% 20%, rgba(110,227,222,.36), transparent 30%);pointer-events:none;}
-#roundWinnerOverlay.win{background:linear-gradient(145deg, #23879f, #16b7a7);}
-#roundWinnerOverlay.loss{background:linear-gradient(145deg, #004870, #235a72);}
+#roundWinnerOverlay.win{background:linear-gradient(145deg, #082b45, #0ca6aa 72%, #ffbc2c);}
+#roundWinnerOverlay.loss{background:linear-gradient(145deg, #082b45, #ff514f 78%, #ffbc2c);}
 #roundWinnerText{position:relative;font-size:46px;font-weight:900;color:white;margin-bottom:14px;letter-spacing:0;text-shadow:0 5px 18px rgba(0,72,112,.35);}
 #roundWinnerSubtext{position:relative;font-size:20px;font-weight:650;color:#dafbe9;line-height:1.35;}
 
@@ -606,6 +606,16 @@ button:hover{background:linear-gradient(135deg,#0fa493,var(--links-blue));}
   background:rgba(23,50,77,.82);
   border:2px solid rgba(255,255,255,.26);
 }
+#winnerAnnouncement.battleWin{
+  background:linear-gradient(135deg, rgba(8,43,69,.88), rgba(12,166,170,.84));
+  border-color:rgba(255,188,44,.72);
+  box-shadow:0 24px 76px rgba(12,166,170,.28), inset 0 0 0 2px rgba(255,255,255,.16);
+}
+#winnerAnnouncement.battleLoss{
+  background:linear-gradient(135deg, rgba(8,43,69,.9), rgba(255,81,79,.82));
+  border-color:rgba(255,188,44,.62);
+  box-shadow:0 24px 76px rgba(255,81,79,.24), inset 0 0 0 2px rgba(255,255,255,.14);
+}
 /* Final LINKS direction: infinity logo, simple cards, responsive chain table */
 :root{
   --card-w:clamp(82px, 8.6vw, 118px);
@@ -621,7 +631,7 @@ body.in-game{
 body.in-game #app{
   width:min(1240px, calc(100vw - 28px));
   height:calc(100vh - 28px);
-  padding:12px 16px 14px;
+  padding:12px 16px max(24px, env(safe-area-inset-bottom));
   display:flex;
   flex-direction:column;
   overflow:visible;
@@ -661,8 +671,9 @@ body.in-game #game{
 #board{
   height:100%;
   min-height:0;
-  grid-template-rows:minmax(110px, .86fr) minmax(210px, 1.35fr) minmax(160px, 1fr);
+  grid-template-rows:minmax(110px, .86fr) minmax(210px, 1.35fr) minmax(170px, .92fr);
   padding:clamp(8px, 1.1vw, 14px);
+  padding-bottom:clamp(24px, 3vh, 42px);
 }
 #gameSidebar{
   position:absolute;
@@ -695,7 +706,7 @@ body.in-game #gameSidebar{display:flex;}
 }
 #playerPilesTop{
   height:190px;
-  transform:translateY(-18px);
+  transform:translateY(-34px);
 }
 #playerPilesTop .pile:nth-child(1){transform:translateX(calc(var(--card-w) * -3.95)) translateY(0);}
 #playerPilesTop .pile:nth-child(2){transform:translateX(calc(var(--card-w) * -2.82)) translateY(30px);}
@@ -994,8 +1005,8 @@ body.show-pile-guides #playerPilesTop .pile::after{
 #chainHistory{
   left:0;
   top:50%;
-  width:calc(100% - var(--center-card-w) - 84px);
-  height:calc(var(--center-card-h) * 1.35);
+  width:calc(100% - var(--center-card-w) - 54px);
+  height:calc(var(--center-card-h) * 1.58);
   transform:translateY(-50%);
   border-radius:999px;
   background:transparent;
@@ -1011,6 +1022,17 @@ body.show-pile-guides #playerPilesTop .pile::after{
 }
 .chainConnector{
   z-index:2;
+  width:calc(var(--center-card-w) * .3);
+  height:calc(var(--center-card-w) * .18);
+  opacity:.9;
+  filter:drop-shadow(0 3px 5px rgba(8,43,69,.12));
+}
+.chainConnector::before,
+.chainConnector::after{
+  border-color:#ffbc2c;
+  border-width:3px;
+  background:rgba(255,255,255,.08);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.42),0 2px 5px rgba(8,43,69,.1);
 }
 .playerCard,.deckFront img,.deckBack img,.centerCardSurface img,.chainHistoryCard{
   image-rendering:auto;
@@ -1275,29 +1297,29 @@ let centerChainHistory = [];
 let lastRenderedChainCardId = null;
 let lastVisibleChain = null;
 const CHAIN_PATH = [
-  {x:"94%", y:"44%", r:"0deg", s:.54},
-  {x:"89%", y:"34%", r:"-4deg", s:.51},
-  {x:"82%", y:"24%", r:"3deg", s:.48},
-  {x:"72%", y:"16%", r:"-3deg", s:.46},
-  {x:"61%", y:"20%", r:"4deg", s:.44},
-  {x:"53%", y:"34%", r:"-2deg", s:.43},
-  {x:"48%", y:"47%", r:"3deg", s:.42},
-  {x:"43%", y:"62%", r:"-4deg", s:.42},
-  {x:"34%", y:"78%", r:"3deg", s:.41},
-  {x:"23%", y:"82%", r:"-3deg", s:.4},
-  {x:"13%", y:"70%", r:"4deg", s:.4},
-  {x:"7%", y:"52%", r:"0deg", s:.39},
-  {x:"12%", y:"35%", r:"-4deg", s:.39},
-  {x:"22%", y:"20%", r:"3deg", s:.4},
-  {x:"34%", y:"16%", r:"-3deg", s:.4},
-  {x:"44%", y:"29%", r:"4deg", s:.41},
-  {x:"51%", y:"47%", r:"-2deg", s:.42},
-  {x:"56%", y:"63%", r:"3deg", s:.42},
-  {x:"65%", y:"79%", r:"-4deg", s:.43},
-  {x:"76%", y:"84%", r:"3deg", s:.44},
-  {x:"86%", y:"72%", r:"-3deg", s:.46},
-  {x:"92%", y:"60%", r:"4deg", s:.48},
-  {x:"96%", y:"54%", r:"0deg", s:.5}
+  {x:"96%", y:"46%", r:"1deg", s:.52},
+  {x:"89%", y:"29%", r:"-7deg", s:.49},
+  {x:"78%", y:"16%", r:"4deg", s:.46},
+  {x:"64%", y:"12%", r:"-4deg", s:.44},
+  {x:"50%", y:"18%", r:"6deg", s:.42},
+  {x:"39%", y:"32%", r:"-3deg", s:.41},
+  {x:"32%", y:"48%", r:"4deg", s:.4},
+  {x:"25%", y:"66%", r:"-7deg", s:.4},
+  {x:"15%", y:"84%", r:"5deg", s:.39},
+  {x:"4%", y:"78%", r:"-5deg", s:.39},
+  {x:"-2%", y:"57%", r:"2deg", s:.38},
+  {x:"4%", y:"34%", r:"-6deg", s:.38},
+  {x:"16%", y:"15%", r:"5deg", s:.39},
+  {x:"31%", y:"8%", r:"-4deg", s:.39},
+  {x:"45%", y:"15%", r:"6deg", s:.4},
+  {x:"56%", y:"30%", r:"-3deg", s:.41},
+  {x:"63%", y:"48%", r:"4deg", s:.42},
+  {x:"70%", y:"66%", r:"-6deg", s:.42},
+  {x:"80%", y:"83%", r:"5deg", s:.43},
+  {x:"91%", y:"78%", r:"-4deg", s:.45},
+  {x:"99%", y:"62%", r:"3deg", s:.47},
+  {x:"102%", y:"51%", r:"-2deg", s:.49},
+  {x:"98%", y:"40%", r:"2deg", s:.5}
 ];
 
 function escapeSvgText(value){
@@ -2408,11 +2430,7 @@ flowPhase,
 currentChainFlipped: currentChain ? currentChain.flipped : null
 });
 const source = findVisibleCardElement(card.id, playedBy);
-const target = deck;
-if(!target) return;
-
-const targetRect = target.getBoundingClientRect();
-if(!targetRect.width || !targetRect.height) return;
+if(!source && !deck) return;
 
 const key = movementKey(card, playedBy);
 const movingClone = activeMovementClones.get(key);
@@ -2425,7 +2443,7 @@ activeMovementClones.delete(key);
 }
 if(!sourceRect || !sourceRect.width || !sourceRect.height){
 const area = playedBy === playerId ? document.getElementById("playerArea") : document.getElementById("opponentArea");
-const areaRect = area ? area.getBoundingClientRect() : targetRect;
+const areaRect = area ? area.getBoundingClientRect() : deck.getBoundingClientRect();
 const fallbackSize = playedBy === playerId ? 142 : 104;
 sourceRect = {
 left: areaRect.left + areaRect.width / 2 - fallbackSize / 2,
@@ -2465,21 +2483,19 @@ clone.style.zIndex = "980";
 document.body.appendChild(clone);
 activeMovementClones.set(key, clone);
 
-const dx = targetRect.left + targetRect.width / 2 - (sourceRect.left + sourceRect.width / 2);
-const dy = targetRect.top + targetRect.height / 2 - (sourceRect.top + sourceRect.height / 2);
-const scale = getCenterCardScale(sourceRect);
-const wallDx = dx * 0.78;
-const wallDy = dy * 0.78;
-flashDeckRejectRing(420);
+const direction = playedBy === playerId ? -1 : 1;
+const nudgeX = Math.max(18, Math.min(34, sourceRect.width * .22)) * direction;
+const nudgeY = playedBy === playerId ? -18 : 18;
+clone.style.transformOrigin = "50% 50%";
 
 const blockAnimation = clone.animate([
 {transform:"translate3d(0,0,0) scale(1) rotate(0deg)",opacity:1,offset:0},
-{transform:`translate3d(${wallDx}px,${wallDy}px,0) scale(${scale}) rotate(-3deg)`,opacity:1,offset:.42},
-{transform:`translate3d(${wallDx - 18}px,${wallDy + 5}px,0) scale(${scale * .92}) rotate(5deg)`,opacity:1,offset:.56},
-{transform:`translate3d(${wallDx + 4}px,${wallDy - 3}px,0) scale(${scale * 1.03}) rotate(-2deg)`,opacity:1,offset:.7},
-{transform:"translate3d(0,0,0) scale(1) rotate(0deg)",opacity:.82,offset:1}
+{transform:`translate3d(${nudgeX}px,${nudgeY}px,0) scale(1.04) rotate(${direction * -4}deg)`,opacity:1,filter:"drop-shadow(0 0 16px rgba(255,81,79,.85))",offset:.34},
+{transform:`translate3d(${nudgeX * -.38}px,${nudgeY * .2}px,0) scale(.98) rotate(${direction * 3}deg)`,opacity:1,filter:"drop-shadow(0 0 8px rgba(255,188,44,.72))",offset:.58},
+{transform:`translate3d(${nudgeX * .18}px,${nudgeY * -.12}px,0) scale(1.01) rotate(${direction * -2}deg)`,opacity:1,filter:"drop-shadow(0 0 10px rgba(255,81,79,.55))",offset:.76},
+{transform:"translate3d(0,0,0) scale(1) rotate(0deg)",opacity:.9,filter:"none",offset:1}
 ],{
-duration:980,
+duration:640,
 easing:"cubic-bezier(.22,.82,.22,1)",
 fill:"forwards"
 });
@@ -2706,6 +2722,7 @@ const scaleBeam = document.getElementById("scaleBeam");
 if(scaleBeam) scaleBeam.style.transform = "rotate(0deg)";
 document.getElementById("winnerAnnouncement").style.opacity = "0";
 document.getElementById("winnerAnnouncement").textContent = "";
+document.getElementById("winnerAnnouncement").classList.remove("battleWin", "battleLoss");
 
 // Animate BATTLE! text
 const battleText = document.getElementById("battleText");
@@ -2889,12 +2906,14 @@ await new Promise(resolve => setTimeout(resolve, 800));
 const winnerAnnouncement = document.getElementById("winnerAnnouncement");
 
 if(iWon){
-winnerAnnouncement.style.color = "#eff8d7";
+winnerAnnouncement.classList.remove("battleLoss");
+winnerAnnouncement.classList.add("battleWin");
+winnerAnnouncement.style.color = "#fff9ed";
 winnerAnnouncement.innerHTML = `
 <div style="text-align:center;">
-<div style="font-size:22px;font-weight:800;margin-bottom:10px;color:#e4e09a;">BATTLE WON</div>
+<div style="font-size:22px;font-weight:800;margin-bottom:10px;color:#ffbc2c;">BATTLE WON</div>
 <div style="font-size:64px;font-weight:900;">YOU WON!</div>
-<div style="font-size:24px;margin-top:10px;color:#6ee3de;">Fastest reaction takes the card</div>
+<div style="font-size:24px;margin-top:10px;color:#8ee8cf;">Fastest reaction takes the card</div>
 </div>
 `;
 
@@ -2902,12 +2921,14 @@ winnerAnnouncement.innerHTML = `
 createConfetti();
 } else {
 const winnerDisplayName = document.getElementById(winnerIsHost ? "leftName" : "rightName").textContent;
-winnerAnnouncement.style.color = "#dbe7f0";
+winnerAnnouncement.classList.remove("battleWin");
+winnerAnnouncement.classList.add("battleLoss");
+winnerAnnouncement.style.color = "#fff9ed";
 winnerAnnouncement.innerHTML = `
 <div style="text-align:center;">
-<div style="font-size:22px;font-weight:800;margin-bottom:10px;color:#6ee3de;">BATTLE LOST</div>
+<div style="font-size:22px;font-weight:800;margin-bottom:10px;color:#ffbc2c;">BATTLE LOST</div>
 <div style="font-size:64px;font-weight:900;">YOU LOST</div>
-<div style="font-size:28px;margin-top:10px;">${winnerDisplayName} wins this battle</div>
+<div style="font-size:28px;margin-top:10px;color:#ffe8d8;">${winnerDisplayName} wins this battle</div>
 </div>
 `;
 }
