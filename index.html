@@ -797,6 +797,18 @@ body.in-game #gameSidebar{display:flex;}
   object-fit:contain;
   z-index:2;
 }
+.chainUnit{
+  position:absolute;
+  left:var(--x);
+  top:var(--y);
+  width:calc(var(--center-card-w) * var(--s, .55) * 1.72);
+  height:calc(var(--center-card-h) * var(--s, .55));
+  opacity:1;
+  transform:translate(-50%, -50%) rotate(var(--r, 0deg));
+  transform-origin:50% 50%;
+  pointer-events:none;
+  z-index:2;
+}
 .chainConnector{
   position:absolute;
   left:var(--x);
@@ -1017,24 +1029,57 @@ body.show-pile-guides #playerPilesTop .pile::after{
 .chainHistoryCard{
   opacity:1;
   z-index:3;
-  transition:left .72s cubic-bezier(.2,.9,.2,1),top .72s cubic-bezier(.2,.9,.2,1),width .72s ease,height .72s ease,transform .72s cubic-bezier(.2,.9,.2,1),opacity .3s ease;
+  transition:opacity .3s ease;
+  will-change:transform;
+}
+.chainUnit{
+  opacity:1;
+  z-index:3;
+  transition:left .76s cubic-bezier(.2,.9,.2,1),top .76s cubic-bezier(.2,.9,.2,1),width .76s ease,height .76s ease,transform .76s cubic-bezier(.2,.9,.2,1),opacity .28s ease;
   will-change:left,top,transform;
+}
+.chainUnit .chainHistoryCard{
+  position:absolute;
+  left:auto;
+  right:0;
+  top:50%;
+  width:calc(var(--center-card-w) * var(--s, .55));
+  height:calc(var(--center-card-h) * var(--s, .55));
+  opacity:1;
+  transform:translateY(-50%);
+  object-fit:contain;
+  z-index:3;
+}
+.chainUnit.connectorRight .chainHistoryCard{
+  left:0;
+  right:auto;
 }
 .chainConnector{
   z-index:2;
-  width:calc(var(--center-card-w) * .3);
-  height:calc(var(--center-card-w) * .18);
-  opacity:.9;
+  left:0;
+  top:50%;
+  width:calc(var(--center-card-w) * var(--s, .55) * .94);
+  height:calc(var(--center-card-w) * var(--s, .55) * .47);
+  opacity:0;
+  transform:translateY(-50%) scale(.78) rotate(var(--cr, 0deg));
+  transform-origin:50% 50%;
+  background:url("assets/ui/links-chain-connector.png") center/contain no-repeat;
   filter:drop-shadow(0 3px 5px rgba(8,43,69,.12));
+  transition:opacity .28s ease .08s,transform .34s cubic-bezier(.18,.88,.2,1) .08s;
+}
+.chainUnit.linkVisible .chainConnector{
+  opacity:.96;
+  transform:translateY(-50%) scale(1) rotate(var(--cr, 0deg));
+}
+.chainUnit.connectorRight .chainConnector{
+  left:auto;
+  right:0;
 }
 .chainConnector::before,
 .chainConnector::after{
-  border-color:#ffbc2c;
-  border-width:3px;
-  background:rgba(255,255,255,.08);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.42),0 2px 5px rgba(8,43,69,.1);
+  content:none;
 }
-.playerCard,.deckFront img,.deckBack img,.centerCardSurface img,.chainHistoryCard{
+.playerCard,.deckFront img,.deckBack img,.centerCardSurface img,.chainHistoryCard,.chainConnector{
   image-rendering:auto;
   -webkit-backface-visibility:visible;
   backface-visibility:visible;
@@ -1317,9 +1362,9 @@ const CHAIN_PATH = [
   {x:"70%", y:"66%", r:"-6deg", s:.42},
   {x:"80%", y:"83%", r:"5deg", s:.43},
   {x:"91%", y:"78%", r:"-4deg", s:.45},
-  {x:"99%", y:"62%", r:"3deg", s:.47},
-  {x:"102%", y:"51%", r:"-2deg", s:.49},
-  {x:"98%", y:"40%", r:"2deg", s:.5}
+  {x:"99%", y:"62%", r:"3deg", s:.47, connectorSide:"right"},
+  {x:"102%", y:"51%", r:"-2deg", s:.49, connectorSide:"right"},
+  {x:"98%", y:"40%", r:"2deg", s:.5, connectorSide:"right"}
 ];
 
 function escapeSvgText(value){
@@ -1356,63 +1401,75 @@ if(!historyEl) return;
 const visibleHistory = centerChainHistory.slice(-CHAIN_PATH.length).reverse();
 const desiredIds = new Set(visibleHistory.map((entry, index) => String(entry.cardId ?? `${entry.iHave}-${index}`)));
 
-historyEl.querySelectorAll(".chainConnector").forEach(connector => connector.remove());
-historyEl.querySelectorAll(".chainHistoryCard").forEach(img => {
-if(desiredIds.has(img.dataset.historyCardId)) return;
-img.dataset.removing = "true";
-img.style.opacity = "0";
-img.style.setProperty("--x", "-8%");
-img.style.setProperty("--y", "52%");
+historyEl.querySelectorAll(":scope > .chainConnector").forEach(connector => connector.remove());
+historyEl.querySelectorAll(":scope > .chainHistoryCard").forEach(img => img.remove());
+historyEl.querySelectorAll(".chainUnit").forEach(unit => {
+if(desiredIds.has(unit.dataset.historyCardId)) return;
+unit.dataset.removing = "true";
+unit.classList.remove("linkVisible");
+unit.style.opacity = "0";
+unit.style.setProperty("--x", "-10%");
+unit.style.setProperty("--y", "55%");
 setTimeout(() => {
-if(img.dataset.removing === "true") img.remove();
+if(unit.dataset.removing === "true") unit.remove();
 }, 760);
 });
 
 visibleHistory.forEach((entry, index) => {
-if(index > 0){
+const historyCardId = String(entry.cardId ?? `${entry.iHave}-${index}`);
+let unit = historyEl.querySelector(`.chainUnit[data-history-card-id="${CSS.escape(historyCardId)}"]`);
+const point = CHAIN_PATH[index];
+if(!unit){
+unit = document.createElement("div");
+unit.className = "chainUnit";
+unit.dataset.historyCardId = historyCardId;
+unit.style.setProperty("--x", "108%");
+unit.style.setProperty("--y", "50%");
+unit.style.setProperty("--r", "0deg");
+unit.style.setProperty("--cr", "0deg");
+unit.style.setProperty("--s", Math.max(.38, point.s - .08));
+unit.style.opacity = "0";
+
 const connector = document.createElement("span");
 connector.className = "chainConnector";
-const previousPoint = CHAIN_PATH[index - 1];
-const currentPoint = CHAIN_PATH[index];
-const previousX = parseFloat(previousPoint.x);
-const previousY = parseFloat(previousPoint.y);
-const currentX = parseFloat(currentPoint.x);
-const currentY = parseFloat(currentPoint.y);
-connector.style.setProperty("--x", `${(previousX + currentX) / 2}%`);
-connector.style.setProperty("--y", `${(previousY + currentY) / 2}%`);
-connector.style.setProperty("--r", `${Math.atan2(currentY - previousY, currentX - previousX) * 180 / Math.PI}deg`);
-historyEl.appendChild(connector);
-}
-const historyCardId = String(entry.cardId ?? `${entry.iHave}-${index}`);
-let img = historyEl.querySelector(`.chainHistoryCard[data-history-card-id="${CSS.escape(historyCardId)}"]`);
-const point = CHAIN_PATH[index];
-if(!img){
-img = document.createElement("img");
+connector.setAttribute("aria-hidden", "true");
+
+const img = document.createElement("img");
 img.className = "chainHistoryCard";
 img.dataset.historyCardId = historyCardId;
-img.style.setProperty("--x", "103%");
-img.style.setProperty("--y", "50%");
-img.style.setProperty("--r", "0deg");
-img.style.setProperty("--s", Math.max(.42, point.s - .08));
-img.style.opacity = "0";
 setCardImageSource(img, entry, "whas");
-historyEl.appendChild(img);
+img.alt = entry.whoHas || "Previous Who has card";
+
+unit.appendChild(connector);
+unit.appendChild(img);
+historyEl.appendChild(unit);
 requestAnimationFrame(() => requestAnimationFrame(() => {
-img.style.setProperty("--x", point.x);
-img.style.setProperty("--y", point.y);
-img.style.setProperty("--r", point.r);
-img.style.setProperty("--s", point.s);
-img.style.opacity = "1";
+unit.style.setProperty("--x", point.x);
+unit.style.setProperty("--y", point.y);
+unit.style.setProperty("--r", point.r);
+unit.style.setProperty("--cr", point.cr || "0deg");
+unit.style.setProperty("--s", point.s);
+unit.style.opacity = "1";
+setTimeout(() => {
+if(unit.isConnected && unit.dataset.removing !== "true") unit.classList.add("linkVisible");
+}, 760);
 }));
 } else {
-img.dataset.removing = "false";
-img.style.setProperty("--x", point.x);
-img.style.setProperty("--y", point.y);
-img.style.setProperty("--r", point.r);
-img.style.setProperty("--s", point.s);
-img.style.opacity = "1";
-}
+unit.dataset.removing = "false";
+unit.style.setProperty("--x", point.x);
+unit.style.setProperty("--y", point.y);
+unit.style.setProperty("--r", point.r);
+unit.style.setProperty("--cr", point.cr || "0deg");
+unit.style.setProperty("--s", point.s);
+unit.style.opacity = "1";
+unit.classList.add("linkVisible");
+const img = unit.querySelector(".chainHistoryCard");
+if(img){
+setCardImageSource(img, entry, "whas");
 img.alt = entry.whoHas || "Previous Who has card";
+}
+}
+unit.classList.toggle("connectorRight", point.connectorSide === "right");
 });
 }
 
