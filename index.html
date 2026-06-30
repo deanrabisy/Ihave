@@ -1000,16 +1000,33 @@ body.show-pile-guides #playerPilesTop .pile::after{
   background:transparent;
 }
 #chainHistory::before{
-  content:"";
+  content:none;
+}
+.chainPathSvg{
   position:absolute;
   inset:-4% -2%;
+  width:104%;
+  height:108%;
+  overflow:visible;
   pointer-events:none;
-  opacity:.34;
-  background:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 420' preserveAspectRatio='none'%3E%3Cpath d='M972 210 C842 28 668 24 500 210 C332 396 158 392 28 210 C158 28 332 24 500 210 C668 396 842 392 972 210' fill='none' stroke='%23ffbc2c' stroke-width='18' stroke-linecap='round' stroke-linejoin='round' opacity='.55'/%3E%3Cpath d='M972 210 C842 28 668 24 500 210 C332 396 158 392 28 210 C158 28 332 24 500 210 C668 396 842 392 972 210' fill='none' stroke='%230ca6aa' stroke-width='5' stroke-linecap='round' stroke-linejoin='round' opacity='.22'/%3E%3C/svg%3E")
-    center/100% 100% no-repeat;
-  filter:drop-shadow(0 6px 10px rgba(8,43,69,.08));
   z-index:0;
+  filter:drop-shadow(0 6px 10px rgba(8,43,69,.08));
+}
+.chainPathSvg .chainPathGold{
+  fill:none;
+  stroke:#ffbc2c;
+  stroke-width:18;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  opacity:.34;
+}
+.chainPathSvg .chainPathTeal{
+  fill:none;
+  stroke:#0ca6aa;
+  stroke-width:5;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  opacity:.14;
 }
 .chainHistoryCard{
   opacity:1;
@@ -1296,31 +1313,72 @@ const linkCardSrcCache = new Map();
 let centerChainHistory = [];
 let lastRenderedChainCardId = null;
 let lastVisibleChain = null;
-const CHAIN_PATH = [
-  {x:"96%", y:"46%", r:"1deg", s:.52},
-  {x:"89%", y:"29%", r:"-7deg", s:.49},
-  {x:"78%", y:"16%", r:"4deg", s:.46},
-  {x:"64%", y:"12%", r:"-4deg", s:.44},
-  {x:"50%", y:"18%", r:"6deg", s:.42},
-  {x:"39%", y:"32%", r:"-3deg", s:.41},
-  {x:"32%", y:"48%", r:"4deg", s:.4},
-  {x:"25%", y:"66%", r:"-7deg", s:.4},
-  {x:"15%", y:"84%", r:"5deg", s:.39},
-  {x:"4%", y:"78%", r:"-5deg", s:.39},
-  {x:"-2%", y:"57%", r:"2deg", s:.38},
-  {x:"4%", y:"34%", r:"-6deg", s:.38},
-  {x:"16%", y:"15%", r:"5deg", s:.39},
-  {x:"31%", y:"8%", r:"-4deg", s:.39},
-  {x:"45%", y:"15%", r:"6deg", s:.4},
-  {x:"56%", y:"30%", r:"-3deg", s:.41},
-  {x:"63%", y:"48%", r:"4deg", s:.42},
-  {x:"70%", y:"66%", r:"-6deg", s:.42},
-  {x:"80%", y:"83%", r:"5deg", s:.43},
-  {x:"91%", y:"78%", r:"-4deg", s:.45},
-  {x:"99%", y:"62%", r:"3deg", s:.47},
-  {x:"102%", y:"51%", r:"-2deg", s:.49},
-  {x:"98%", y:"40%", r:"2deg", s:.5}
-];
+const CHAIN_SLOT_COUNT = 23;
+const CHAIN_TOTAL_POSITIONS = 24;
+const CHAIN_SAMPLE_COUNT = 1440;
+const CHAIN_PATH = buildEqualInfinitySlots();
+
+function infinityPoint(theta){
+return {
+x: 50 + 46 * Math.sin(theta),
+y: 50 - 33 * Math.sin(2 * theta)
+};
+}
+
+function buildInfinitySamples(count=CHAIN_SAMPLE_COUNT){
+const samples = [];
+let total = 0;
+for(let i=0; i<=count; i++){
+const theta = Math.PI / 2 - (Math.PI * 2 * i / count);
+const point = infinityPoint(theta);
+const previous = samples[i - 1];
+if(previous){
+total += Math.hypot(point.x - previous.x, point.y - previous.y);
+}
+samples.push({...point, theta, length: total});
+}
+return {samples, total};
+}
+
+function interpolateInfinitySample(samples, targetLength){
+for(let i=1; i<samples.length; i++){
+const previous = samples[i - 1];
+const current = samples[i];
+if(current.length < targetLength) continue;
+const span = current.length - previous.length || 1;
+const t = (targetLength - previous.length) / span;
+const x = previous.x + (current.x - previous.x) * t;
+const y = previous.y + (current.y - previous.y) * t;
+const theta = previous.theta + (current.theta - previous.theta) * t;
+const next = samples[Math.min(i + 2, samples.length - 1)];
+const back = samples[Math.max(i - 2, 0)];
+const tangent = Math.atan2(next.y - back.y, next.x - back.x) * 180 / Math.PI;
+return {x, y, theta, tangent};
+}
+const finalSample = samples[samples.length - 1];
+return {...finalSample, tangent:0};
+}
+
+function buildEqualInfinitySlots(){
+const {samples, total} = buildInfinitySamples();
+const slots = [];
+for(let i=1; i<=CHAIN_SLOT_COUNT; i++){
+const point = interpolateInfinitySample(samples, total * i / CHAIN_TOTAL_POSITIONS);
+const softenedRotation = Math.max(-8, Math.min(8, point.tangent * .16));
+slots.push({
+x: `${point.x.toFixed(2)}%`,
+y: `${point.y.toFixed(2)}%`,
+r: `${softenedRotation.toFixed(1)}deg`,
+s: .4
+});
+}
+return slots;
+}
+
+function buildInfinityPathData(){
+const {samples} = buildInfinitySamples(240);
+return samples.map((point, index) => `${index === 0 ? "M" : "L"} ${point.x.toFixed(2)} ${point.y.toFixed(2)}`).join(" ") + " Z";
+}
 
 function escapeSvgText(value){
 return String(value || "").replace(/[&<>"']/g, char => ({
@@ -1350,9 +1408,30 @@ centerPrompt.classList.toggle("is-have", Boolean(chain && !chain.flipped));
 centerPrompt.classList.toggle("who-has", Boolean(chain && chain.flipped));
 }
 
+function ensureChainPathSvg(historyEl){
+if(!historyEl) return;
+let svg = historyEl.querySelector(":scope > .chainPathSvg");
+if(svg) return;
+const ns = "http://www.w3.org/2000/svg";
+svg = document.createElementNS(ns, "svg");
+svg.classList.add("chainPathSvg");
+svg.setAttribute("viewBox", "0 0 100 100");
+svg.setAttribute("preserveAspectRatio", "none");
+svg.setAttribute("aria-hidden", "true");
+const pathData = buildInfinityPathData();
+["chainPathGold", "chainPathTeal"].forEach(className => {
+const path = document.createElementNS(ns, "path");
+path.setAttribute("class", className);
+path.setAttribute("d", pathData);
+svg.appendChild(path);
+});
+historyEl.prepend(svg);
+}
+
 function renderCenterChainHistory(){
 const historyEl = document.getElementById("chainHistory");
 if(!historyEl) return;
+ensureChainPathSvg(historyEl);
 const visibleHistory = centerChainHistory.slice(-CHAIN_PATH.length).reverse();
 const desiredIds = new Set(visibleHistory.map((entry, index) => String(entry.cardId ?? `${entry.iHave}-${index}`)));
 
