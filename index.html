@@ -1432,7 +1432,7 @@ function renderCenterChainHistory(){
 const historyEl = document.getElementById("chainHistory");
 if(!historyEl) return;
 ensureChainPathSvg(historyEl);
-const visibleHistory = centerChainHistory.slice(-CHAIN_PATH.length).reverse();
+const visibleHistory = centerChainHistory.filter(isCompleteChainCard).slice(-CHAIN_PATH.length).reverse();
 const desiredIds = new Set(visibleHistory.map((entry, index) => String(entry.cardId ?? `${entry.iHave}-${index}`)));
 
 historyEl.querySelectorAll(":scope > .chainHistoryCard").forEach(img => img.remove());
@@ -1493,15 +1493,26 @@ img.alt = entry.whoHas || "Previous Who has card";
 }
 
 function rememberChainCard(chain){
-if(!chain || chain.cardId === undefined || chain.cardId === null) return;
+if(!isCompleteChainCard(chain)) return;
 const chainCardId = String(chain.cardId);
-if(lastRenderedChainCardId && chainCardId !== lastRenderedChainCardId && lastVisibleChain){
+if(lastRenderedChainCardId && chainCardId !== lastRenderedChainCardId && isCompleteChainCard(lastVisibleChain)){
 centerChainHistory.push({...lastVisibleChain});
+centerChainHistory = centerChainHistory.filter(isCompleteChainCard);
 centerChainHistory = centerChainHistory.slice(-CHAIN_PATH.length);
 renderCenterChainHistory();
 }
 lastRenderedChainCardId = chainCardId;
 lastVisibleChain = {...chain};
+}
+
+function isCompleteChainCard(chain){
+return Boolean(
+chain &&
+chain.cardId !== undefined &&
+chain.cardId !== null &&
+String(chain.iHave || "").trim() &&
+String(chain.whoHas || "").trim()
+);
 }
 
 function animalIconSvg(subject, ink="#17324d", accent="#ff6b6b"){
@@ -3021,6 +3032,21 @@ battleScreen.classList.remove("visible");
 await new Promise(resolve => setTimeout(resolve, 300));
 
 clearBattleIntroEffects();
+if(!result.winnerCard || !isCompleteChainCard({
+...result.winnerCard,
+cardId: result.winnerCard.id
+})){
+console.warn("Battle result missing a complete winner card; skipping chain update", result);
+clearPendingPlayVisuals();
+renderHand();
+setFlowPhase(currentChain && !currentChain.flipped ? FLOW_PHASES.CENTER_WAITING_FLIP : FLOW_PHASES.HAND_READY);
+document.getElementById("battleScreen").style.display = "none";
+document.getElementById("battleScreen").classList.remove("battlePress", "visible");
+document.body.style.overflow = "";
+battleState = null;
+battleClicks = 0;
+return;
+}
 setFlowPhase(FLOW_PHASES.CARD_MOVING);
 animateCardToCenter(result.winnerCard, result.winner);
 await new Promise(resolve => setTimeout(resolve, CARD_SETTLE_MS));
@@ -3098,12 +3124,11 @@ overlay.style.display = "none";
 }
 }
 } else {
-// Loser - card stays in hand, no need to re-render
-console.log("Lost battle, keeping card");
-currentChain = battleChainPreview;
-renderChainDisplay(battleChainPreview);
-setFlowPhase(battleChainPreview.flipped ? FLOW_PHASES.HAND_READY : FLOW_PHASES.CENTER_WAITING_FLIP);
+// Loser keeps the card; wait for the winner's Firebase chain update so history advances once.
+console.log("Lost battle, keeping card and waiting for authoritative chain update");
+clearPendingPlayVisuals();
 renderHand();
+setFlowPhase(FLOW_PHASES.CENTER_WAITING_FLIP);
 }
 
 // Hide battle screen

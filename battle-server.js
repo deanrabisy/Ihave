@@ -17,7 +17,7 @@ const io = new Server(server, {
 // Store active rooms and their state
 const rooms = {};
 
-const BATTLE_WINDOW_MS = 900; // Race-click window for battle interception
+const BATTLE_WINDOW_MS = 520; // Race-click window for battle interception
 const AUTO_PLAY_DELAY_MS = BATTLE_WINDOW_MS + 40; // Give edge-of-window plays time to arrive
 const BATTLE_INTRO_MS = 1500; // Clear multi-hit collision beat before clicking starts
 const PENDING_STALE_MS = AUTO_PLAY_DELAY_MS + 500;
@@ -176,10 +176,9 @@ io.on('connection', (socket) => {
         clearTimeout(opponentPending.timeout);
       }
       
-      // Determine who is student and apply 1/3 chance bonus
+      // Preserve player roles for battle UI. Resolution is click-based.
       const player1IsStudent = !battleOpponent.isHost;
       const player2IsStudent = !isHost;
-      const hasStudentBonus = Math.random() < 0.333;
       
       const battleId = `${Date.now()}-${++battleSequence}`;
       room.activeBattle = {
@@ -194,7 +193,6 @@ io.on('connection', (socket) => {
         clicks2: 0,
         startTime: now + BATTLE_INTRO_MS,
         introMs: BATTLE_INTRO_MS,
-        studentBonus: hasStudentBonus,
         student: player1IsStudent ? battleOpponent.playerId : (player2IsStudent ? playerId : null)
       };
       
@@ -323,21 +321,16 @@ io.on('connection', (socket) => {
     if (battle.resolved) return;
     battle.resolved = true;
     
-    // Apply student bonus (1.2x multiplier)
     let effectiveClicks1 = battle.clicks1;
     let effectiveClicks2 = battle.clicks2;
     
-    if (battle.studentBonus && battle.student) {
-      if (battle.student === battle.player1) {
-        effectiveClicks1 = Math.round(battle.clicks1 * 1.2);
-      } else if (battle.student === battle.player2) {
-        effectiveClicks2 = Math.round(battle.clicks2 * 1.2);
-      }
-    }
-    
     // Determine winner
-    const winner = effectiveClicks1 > effectiveClicks2 ? battle.player1 : battle.player2;
-    const winnerCard = effectiveClicks1 > effectiveClicks2 ? battle.card1 : battle.card2;
+    let player1Wins = effectiveClicks1 > effectiveClicks2;
+    if (effectiveClicks1 === effectiveClicks2) {
+      player1Wins = Math.random() < 0.5;
+    }
+    const winner = player1Wins ? battle.player1 : battle.player2;
+    const winnerCard = player1Wins ? battle.card1 : battle.card2;
     
     console.log(`Battle resolved: ${winner} wins with ${effectiveClicks1} vs ${effectiveClicks2}`);
     
